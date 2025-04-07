@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 public class InputReader : MonoBehaviour
 {
     [SerializeField]
+    private PlayerController controllerReference;
+    [SerializeField]
     private InputActionReference moveAction;
 
     private void HandleMoveInput(InputAction.CallbackContext ctx)
@@ -22,9 +24,13 @@ public class InputReader : MonoBehaviour
             state = "started";
         }
         Debug.Log("Move Input " + state + ":" + ctx.ReadValue<Vector2>());
+        if (controllerReference)
+        {
+            controllerReference.UpdateVelocity(ctx.ReadValue<Vector2>());
+        }
     }
 
-    private void OnEnable()
+    private void Update()
     {
         moveAction.action.started += HandleMoveInput; // Cuando deja de ser 0
         moveAction.action.performed += HandleMoveInput; // Solo corre cuando cambian los valores
