@@ -1,0 +1,59 @@
+using TMPro.EditorUtilities;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+/// <summary>
+/// Represents a force that can be applied to a rigidBody
+/// </summary>
+public class ForceRequest
+{
+    public Vector3 direction;
+    public float acceleration;
+    public float speed;
+}
+
+/// <summary>
+/// Moves the character, controls everything related to the world and the position
+/// </summary>
+[RequireComponent(typeof(Rigidbody))]
+public class Character : MonoBehaviour
+{
+    [SerializeField]
+    private LayerMask groundlayer;
+    [SerializeField]
+    private float groundCheckDistance = 1f;
+    private Rigidbody _rb;
+    private ForceRequest _instantForceRequest;
+    private ForceRequest _continuousForceRequest;
+
+    public bool IsGrounded()
+    {
+        return Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundlayer);
+    }
+
+    public void RequestInstantForce(ForceRequest forceRequest)
+    {
+        _instantForceRequest = forceRequest;
+    }
+
+    public void RequestContinuousForce(ForceRequest forceRequest)
+    {
+        _continuousForceRequest = forceRequest;
+    }
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();
+    }
+
+    private void FixedUpdate()
+    {
+        if (_continuousForceRequest == null) return;
+        var speedPercentage = _rb.linearVelocity.magnitude / _continuousForceRequest.speed;
+        var remainingSpeedPercentage = Mathf.Clamp01(1f - speedPercentage);
+        _rb.AddForce(_continuousForceRequest.direction * _continuousForceRequest.acceleration * remainingSpeedPercentage, ForceMode.Force);
+        if (_instantForceRequest == null) return;
+        _rb.AddForce(_instantForceRequest.direction * _instantForceRequest.acceleration, ForceMode.Impulse);
+        _instantForceRequest = null;
+    }
+}
