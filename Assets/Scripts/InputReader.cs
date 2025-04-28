@@ -1,24 +1,53 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputReader : MonoBehaviour
-{
+public class ActionBuffer {
+    private Dictionary<float, InputAction> _buffer;
+
+    public ActionBuffer() {
+        _buffer = new Dictionary<float, InputAction>();
+    }
+
+    public void Add(InputAction action) {
+        _buffer.TryAdd(Time.time, action);
+    }
+
+    public bool HasActionBeenExecuted(InputAction targetAction, float timeWindow) {
+        float currentTime = Time.time;
+        foreach (var (actionTime, action) in _buffer) {
+            if (currentTime - actionTime <= timeWindow && action == targetAction) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+public class InputReader : MonoBehaviour {
     [SerializeField]
-    private PlayerController controllerReference;
+    private PlyController playerControllerReference;
     [SerializeField]
     private InputActionReference moveAction;
     [SerializeField]
+    private InputActionReference lookAction;
+    [SerializeField]
     private InputActionReference jumpAction;
 
+    private ActionBuffer _actionBuffer = new ActionBuffer();
+
     private void HandleJumpInput(InputAction.CallbackContext ctx) {
-        if(controllerReference) {
-            controllerReference.SetJumping(ctx.ReadValue<float>());
+        if(playerControllerReference) {
+            _actionBuffer.Add(ctx.action);
+            playerControllerReference.OnJump();
         }
     } 
 
     private void HandleMoveInput(InputAction.CallbackContext ctx) {
-        if (controllerReference) {
-            controllerReference.UpdateVelocity(ctx.ReadValue<Vector2>());
+        if (playerControllerReference) {
+            // We don't add movement to the action buffer.
+            playerControllerReference.OnMove(ctx.ReadValue<Vector2>());
         }
     }
 
@@ -30,7 +59,7 @@ public class InputReader : MonoBehaviour
         }
         if(jumpAction) {
             jumpAction.action.started += HandleJumpInput;
-            jumpAction.action.canceled += HandleJumpInput;
+            //jumpAction.action.canceled += HandleJumpInput;
         }
     }
 }

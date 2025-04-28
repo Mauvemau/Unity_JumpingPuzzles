@@ -3,12 +3,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Reads input and decides actions taken by the player
+/// Decides actions taken by the player based on input received.
 /// </summary>
-public class PlyController : MonoBehaviour
-{
-    [SerializeField]
-    private Character character;
+[RequireComponent(typeof(Character))]
+public class PlyController : MonoBehaviour {
+    private Character _character;
     [Header("Look")]
     [SerializeField]
     private InputActionReference lookAction;
@@ -25,41 +24,30 @@ public class PlyController : MonoBehaviour
     [SerializeField]
     private float jumpForce = 5f;
 
-    private void OnLook(InputAction.CallbackContext ctx)
-    {
+    private void OnLook(InputAction.CallbackContext ctx) {
         var value = ctx.ReadValue<Vector2>();
     }
 
-    private void OnMove(InputAction.CallbackContext ctx)
-    {
+    public void OnMove(Vector2 horizontalInput) {
         ForceRequest request = new ForceRequest();
-        Vector2 horizontalInput = ctx.ReadValue<Vector2>();
         request.direction = new Vector3(horizontalInput.x, 0, horizontalInput.y);
         request.speed = speed;
         request.acceleration = force;
-        character.RequestContinuousForce(request);
+        _character.RequestContinuousForce(request);
     }
 
-    private void OnJump(InputAction.CallbackContext ctx)
-    {
-        if (character.IsGrounded())
-        {
+    public void OnJump() {
+        if (_character.feet.IsGrounded()) {
             ForceRequest request = new ForceRequest();
             request.direction = Vector3.up;
             request.acceleration = jumpForce;
             request.speed = speed;
-            character.RequestInstantForce(request);
+            _character.feet.setJumping();
+            _character.RequestInstantForce(request);
         }
     }
 
-    private void OnEnable()
-    {
-        if (moveAction == null) return;
-        moveAction.action.performed += OnMove;
-        moveAction.action.canceled += OnMove;
-        if (jumpAction == null) return;
-        jumpAction.action.performed += OnJump;
-        if (lookAction == null) return;
-        lookAction.action.performed += OnLook;
+    private void Awake() {
+        _character = GetComponent<Character>();
     }
 }
