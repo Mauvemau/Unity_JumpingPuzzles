@@ -17,7 +17,6 @@ public class ForceRequest
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class Character : MonoBehaviour {
-    [SerializeField]
     public CharacterFoot feet;
     private Rigidbody _rb;
     private ForceRequest _instantForceRequest;

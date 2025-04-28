@@ -62,4 +62,10 @@ public class InputReader : MonoBehaviour {
             Debug.LogError($"{nameof(jumpAction)} is null!");
         }
     }
+
+    private void Awake() {
+        if(playerControllerReference == null) {
+            Debug.LogError("Player Controller reference is null!");
+        }
+    }
 }
