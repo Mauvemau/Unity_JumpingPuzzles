@@ -18,7 +18,7 @@ public class ForceRequest
 [RequireComponent(typeof(Rigidbody))]
 public class Character : MonoBehaviour {
     [SerializeField]
-    public PlayerFoot feet;
+    public CharacterFoot feet;
     private Rigidbody _rb;
     private ForceRequest _instantForceRequest;
     private ForceRequest _continuousForceRequest;
@@ -43,6 +43,8 @@ public class Character : MonoBehaviour {
             _rb.AddForce(_continuousForceRequest.direction * (_continuousForceRequest.acceleration * remainingSpeedPercentage), ForceMode.Force);
         }
         if (_instantForceRequest != null) {
+            // Resetting vertical velocity before jumping so that the jump always has the same impulse.
+            _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, 0, _rb.linearVelocity.z);
             _rb.AddForce(_instantForceRequest.direction * _instantForceRequest.acceleration, ForceMode.Impulse);
             _instantForceRequest = null;
         }

@@ -53,7 +53,7 @@ public class PlyController : MonoBehaviour {
         _character = GetComponent<Character>();
     }
 
-    private void Update() {
+    private void FixedUpdate() {
         if (_character.feet.IsGrounded() && ActionBuffer.HasActionBeenExecuted("Jump", earlyJumpWindow)) {
             OnJump();
         }

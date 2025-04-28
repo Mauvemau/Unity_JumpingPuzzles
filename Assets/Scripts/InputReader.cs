@@ -51,9 +51,15 @@ public class InputReader : MonoBehaviour {
             moveAction.action.performed += HandleMoveInput; // Solo corre cuando cambian los valores
             moveAction.action.canceled += HandleMoveInput; // Cuando vuelve a 0
         }
-        if(jumpAction) {
+        else {
+            Debug.LogError($"{nameof(moveAction)} is null!");
+        }
+        if (jumpAction) {
             jumpAction.action.started += HandleJumpInput;
             //jumpAction.action.canceled += HandleJumpInput;
+        }
+        else {
+            Debug.LogError($"{nameof(jumpAction)} is null!");
         }
     }
 }

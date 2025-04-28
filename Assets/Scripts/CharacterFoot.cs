@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerFoot : MonoBehaviour {
+public class CharacterFoot : MonoBehaviour {
     [Header("Ground Settings")]
     [SerializeField]
     private LayerMask groundLayer;
@@ -25,11 +25,20 @@ public class PlayerFoot : MonoBehaviour {
         return (IsTouchingGround() && !_jumping);
     }
 
-    private void Update() {
+    private void FixedUpdate() {
         if (_jumping) {
             if (Time.time > _jumpTimestamp + jumpCooldown && IsTouchingGround()) {
                 _jumping = false;
             }
+        }
+    }
+
+    private void Awake() {
+        if (gameObject.layer == 0) {
+            Debug.LogWarning("Layer for character foot is set to default");
+        }
+        if (groundLayer.value == 0) {
+            Debug.LogWarning("Ground layer for character foot raycast is not configured.");
         }
     }
 }
