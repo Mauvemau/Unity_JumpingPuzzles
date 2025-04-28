@@ -3,20 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ActionBuffer {
-    private Dictionary<float, InputAction> _buffer;
+public static class ActionBuffer {
+    private static readonly Dictionary<float, string> Buffer = new();
 
-    public ActionBuffer() {
-        _buffer = new Dictionary<float, InputAction>();
+    public static void Add(string action) {
+        Buffer.TryAdd(Time.time, action);
     }
 
-    public void Add(InputAction action) {
-        _buffer.TryAdd(Time.time, action);
-    }
-
-    public bool HasActionBeenExecuted(InputAction targetAction, float timeWindow) {
+    public static bool HasActionBeenExecuted(string targetAction, float timeWindow) {
         float currentTime = Time.time;
-        foreach (var (actionTime, action) in _buffer) {
+        foreach (var (actionTime, action) in Buffer) {
             if (currentTime - actionTime <= timeWindow && action == targetAction) {
                 return true;
             }
@@ -35,11 +31,9 @@ public class InputReader : MonoBehaviour {
     [SerializeField]
     private InputActionReference jumpAction;
 
-    private ActionBuffer _actionBuffer = new ActionBuffer();
-
     private void HandleJumpInput(InputAction.CallbackContext ctx) {
         if(playerControllerReference) {
-            _actionBuffer.Add(ctx.action);
+            ActionBuffer.Add(ctx.action.name);
             playerControllerReference.OnJump();
         }
     } 

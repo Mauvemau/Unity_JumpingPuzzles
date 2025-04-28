@@ -23,6 +23,8 @@ public class PlyController : MonoBehaviour {
     private InputActionReference jumpAction;
     [SerializeField]
     private float jumpForce = 5f;
+    [SerializeField] 
+    private float earlyJumpWindow = .2f;
 
     private void OnLook(InputAction.CallbackContext ctx) {
         var value = ctx.ReadValue<Vector2>();
@@ -42,12 +44,18 @@ public class PlyController : MonoBehaviour {
             request.direction = Vector3.up;
             request.acceleration = jumpForce;
             request.speed = speed;
-            _character.feet.setJumping();
+            _character.feet.SetJumping();
             _character.RequestInstantForce(request);
         }
     }
 
     private void Awake() {
         _character = GetComponent<Character>();
+    }
+
+    private void Update() {
+        if (_character.feet.IsGrounded() && ActionBuffer.HasActionBeenExecuted("Jump", earlyJumpWindow)) {
+            OnJump();
+        }
     }
 }

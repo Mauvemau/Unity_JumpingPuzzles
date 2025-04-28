@@ -12,22 +12,22 @@ public class PlayerFoot : MonoBehaviour {
     private float _jumpTimestamp = 0f;
     private bool _jumping = false;
 
-    private bool isTouchingGround() {
+    private bool IsTouchingGround() {
         return Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
     }
 
-    public void setJumping() {
+    public void SetJumping() {
         _jumping = true;
         _jumpTimestamp = Time.time;
     }
     
     public bool IsGrounded() {
-        return (isTouchingGround() && !_jumping);
+        return (IsTouchingGround() && !_jumping);
     }
 
     private void Update() {
         if (_jumping) {
-            if (Time.time > _jumpTimestamp + jumpCooldown && isTouchingGround()) {
+            if (Time.time > _jumpTimestamp + jumpCooldown && IsTouchingGround()) {
                 _jumping = false;
             }
         }

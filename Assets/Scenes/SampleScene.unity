@@ -643,7 +643,8 @@ MonoBehaviour:
   speed: 25
   force: 30
   jumpAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  jumpForce: 10
+  jumpForce: 8
+  earlyJumpWindow: 0.2
 --- !u!114 &582510305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -823,8 +824,8 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 1
-  groundCheckDistance: 1
-  jumpCooldown: 0.2
+  groundCheckDistance: 1.1
+  jumpCooldown: 0.15
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
