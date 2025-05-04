@@ -8,27 +8,16 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Character))]
 public class PlyController : MonoBehaviour {
     private Character _character;
-    [Header("Look")]
-    [SerializeField]
-    private InputActionReference lookAction;
     [Header("Movement")]
-    [SerializeField]
-    private InputActionReference moveAction;
     [SerializeField]
     private float speed = 10f;
     [SerializeField]
     private float force = 10f;
     [Header("Jump")]
     [SerializeField]
-    private InputActionReference jumpAction;
-    [SerializeField]
     private float jumpForce = 5f;
     [SerializeField] 
     private float earlyJumpWindow = .2f;
-
-    private void OnLook(InputAction.CallbackContext ctx) {
-        var value = ctx.ReadValue<Vector2>();
-    }
 
     public void OnMove(Vector2 horizontalInput) {
         ForceRequest request = new ForceRequest();
