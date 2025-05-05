@@ -88,20 +88,7 @@ public class InputReader : MonoBehaviour {
     private void HandleMoveInput(InputAction.CallbackContext ctx) {
         if (!playerControllerReference) return;
         // We don't add movement to the action buffer.
-        if (!cameraControllerReference) {
-            playerControllerReference.OnMove(ctx.ReadValue<Vector2>());
-        }
-        else {
-            var inputValue = ctx.ReadValue<Vector2>();
-            var camOffset = cameraControllerReference.GetCameraTransformOffset();
-            camOffset.Forward.y = 0;
-            camOffset.Right.y = 0;
-            // Convert input into world-space movement
-            Vector3 moveDirection = (camOffset.Right * inputValue.x) +
-                                    (camOffset.Forward * inputValue.y);
-
-            playerControllerReference.OnMove(new Vector2(moveDirection.x, moveDirection.z));
-        }
+        playerControllerReference.OnMove(ctx.ReadValue<Vector2>());
     }
 
     private void Update() {
