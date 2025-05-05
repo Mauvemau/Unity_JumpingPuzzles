@@ -705,10 +705,10 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
-  m_Dithering: 0
+  m_Dithering: 1
   m_ClearDepth: 1
   m_AllowXRRendering: 1
   m_AllowHDROutput: 1
@@ -737,7 +737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9789e0f48d2ee4e91a6a48fa7d0614b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 18
+  mouseSensitivity: 10
   analogStickSensitivity: 120
 --- !u!114 &330585549
 MonoBehaviour:
@@ -755,7 +755,7 @@ MonoBehaviour:
   offset: {x: 0, y: 2, z: -6}
   horizontalSpeed: 1.2
   verticalSpeed: 0.8
-  rotationSmoothness: 0.1
+  rotationSmoothness: 0.8
   minClampAngle: -70
   maxClampAngle: 80
   collisionLayer:
@@ -4448,7 +4448,7 @@ Light:
     serializedVersion: 2
     m_Bits: 55
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
