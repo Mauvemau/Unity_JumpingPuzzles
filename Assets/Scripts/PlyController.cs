@@ -13,6 +13,8 @@ public class PlyController : MonoBehaviour {
     private float speed = 10f;
     [SerializeField]
     private float force = 10f;
+    [SerializeField]
+    private float airControlFactor = 1.5f;
     [Header("Jump")]
     [SerializeField]
     private float jumpForce = 5f;
@@ -23,7 +25,10 @@ public class PlyController : MonoBehaviour {
         ForceRequest request = new ForceRequest();
         request.direction = new Vector3(horizontalInput.x, 0, horizontalInput.y);
         request.speed = speed;
-        request.acceleration = force;
+
+        // Different level of control if airborne or grounded.
+        request.acceleration = _character.feet.IsGrounded() ? force : force * airControlFactor;
+
         _character.RequestContinuousForce(request);
     }
 

@@ -35,6 +35,18 @@ public class Character : MonoBehaviour {
 
     }
 
+    private void ResetMomentum() {
+        if (_instantForceRequest == null) { 
+            _rb.linearVelocity = Vector3.zero;
+            return;
+        }
+
+        Vector3 preservedDirection = _continuousForceRequest.direction.normalized;
+        float projectedSpeed = Vector3.Dot(_rb.linearVelocity, preservedDirection);
+        Vector3 correctedVelocity = preservedDirection * projectedSpeed;
+        _rb.linearVelocity = new Vector3(correctedVelocity.x, 0, correctedVelocity.z);
+    }   
+
     private void FixedUpdate() {
         if (_continuousForceRequest != null) {
             var speedPercentage = _rb.linearVelocity.magnitude / _continuousForceRequest.speed;
@@ -43,7 +55,7 @@ public class Character : MonoBehaviour {
         }
         if (_instantForceRequest != null) {
             // Resetting vertical velocity before jumping so that the jump always has the same impulse.
-            _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, 0, _rb.linearVelocity.z);
+            ResetMomentum();
             _rb.AddForce(_instantForceRequest.direction * _instantForceRequest.acceleration, ForceMode.Impulse);
             _instantForceRequest = null;
         }

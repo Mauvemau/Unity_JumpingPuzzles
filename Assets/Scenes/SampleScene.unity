@@ -289,6 +289,13 @@ MonoBehaviour:
   horizontalSpeed: 1.2
   verticalSpeed: 0.8
   rotationSmoothness: 0.1
+  minClampAngle: -70
+  maxClampAngle: 80
+  collisionLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  minDistance: 1
+  maxDistance: 7
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -780,7 +787,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 25
-  force: 30
+  force: 25
+  airControlFactor: 1
   jumpForce: 8
   earlyJumpWindow: 0.2
 --- !u!114 &582510305

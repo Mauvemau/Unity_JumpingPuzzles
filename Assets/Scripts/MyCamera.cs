@@ -17,6 +17,17 @@ public class MyCamera : MonoBehaviour {
     private float verticalSpeed = 1f;
     [SerializeField] 
     private float rotationSmoothness = 0.1f;
+    [Header("Configuration")]
+    [SerializeField]
+    private float minClampAngle = -70f;
+    [SerializeField]
+    private float maxClampAngle = 80f;
+    [SerializeField]
+    public LayerMask collisionLayer;
+    [SerializeField]
+    private float minDistance = 1f;
+    [SerializeField]
+    private float maxDistance = 7f;
     
     private Vector2 _requestedRotationVelocity;
     private Vector2 _smoothedRotation; // We declare these here so that we don't do it in every late update loop
@@ -34,19 +45,38 @@ public class MyCamera : MonoBehaviour {
     public void RequestRotation(Vector2 rotationDirection) {
         _requestedRotationVelocity = rotationDirection;
     }
-    
-    private void LateUpdate() {
-        if (!target) return;
+
+    private Vector3 HandleCameraCollision(Vector3 desiredPosition) {
+        Vector3 direction = (desiredPosition - target.position).normalized;
+        RaycastHit hit;
+
+        if (Physics.Raycast(target.position, direction, out hit, maxDistance, collisionLayer)) {
+            float distance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
+            return target.position + direction * distance;
+        }
+        
+        return desiredPosition; // If no collision is detected we just return it as it is.
+    }
+
+    private Vector3 HandleCameraMovement() {
         _smoothedRotation = Vector2.Lerp(_smoothedRotation, _requestedRotationVelocity, rotationSmoothness);
 
         _yaw += _smoothedRotation.x * horizontalSpeed * Time.deltaTime;
         _pitch -= _smoothedRotation.y * verticalSpeed * Time.deltaTime;
-        _pitch = Mathf.Clamp(_pitch, -70f, 80f);
+        _pitch = Mathf.Clamp(_pitch, minClampAngle, maxClampAngle);
 
         Quaternion desiredRotation = Quaternion.Euler(_pitch, _yaw, 0);
-        Vector3 desiredPositon = target.position + desiredRotation * offset;
-        
-        transform.position = desiredPositon;
+        return target.position + desiredRotation * offset;
+    }
+
+    private void LateUpdate() {
+        if (!target) return;
+
+        Vector3 desiredPosition = HandleCameraMovement();
+
+        Vector3 finalPosition = HandleCameraCollision(desiredPosition);
+
+        transform.position = finalPosition;
         transform.LookAt(target);
     }
 
@@ -59,6 +89,9 @@ public class MyCamera : MonoBehaviour {
         }
         if (verticalSpeed == 0) {
             Debug.LogWarning("The vertical speed for the camera is set to 0, the camera will not rotate vertically!");
+        }
+        if (collisionLayer.value == 0) {
+            Debug.LogWarning("Collision layer for the camera is not configured.");
         }
     }
 }
