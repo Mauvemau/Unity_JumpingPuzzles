@@ -36,7 +36,8 @@ public class CharacterFoot : MonoBehaviour {
     /// Returns whether the foot are on the ground.
     /// </summary>
     public bool IsGrounded() {
-        return (!_jumping && IsTouchingGround());
+        if (_jumping) return false;
+        return (Time.time <= _lastGroundedTime + coyoteTime);
     }
 
     /// <summary>

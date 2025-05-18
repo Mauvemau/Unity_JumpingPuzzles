@@ -112,7 +112,6 @@ public class Character : MonoBehaviour {
             float slopeMultiplier = GetSlopeEffortMultiplier(slopeAngle);
 
             projectedDirection.y *= slopeMultiplier; // Reduce Y force based on slope steepness.
-            Debug.Log(projectedDirection);
             
             var speedPercentage = _rb.linearVelocity.magnitude / _continuousForceRequest.Speed;
             var remainingSpeedPercentage = Mathf.Clamp01(1f - speedPercentage);
