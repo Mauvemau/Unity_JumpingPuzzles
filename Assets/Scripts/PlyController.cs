@@ -14,20 +14,22 @@ public class PlyController : MonoBehaviour {
     [SerializeField]
     private float force = 10f;
     [SerializeField]
+    [Tooltip("Multiplies the amount of force applied to the character when airborne")]
     private float airControlFactor = 1.5f;
     [Header("Jump")]
     [SerializeField]
     private float jumpForce = 5f;
-    [SerializeField] 
+    [SerializeField]
+    [Tooltip("Defines the time window in which a jump input will be accepted if it's pressed before the character has landed")]
     private float earlyJumpWindow = .2f;
 
     public void OnMove(Vector2 horizontalInput) {
         ForceRequest request = new ForceRequest();
-        request.direction = new Vector3(horizontalInput.x, 0, horizontalInput.y);
-        request.speed = speed;
+        request.Direction = new Vector3(horizontalInput.x, 0, horizontalInput.y);
+        request.Speed = speed;
 
         // Different level of control if airborne or grounded.
-        request.acceleration = _character.feet.IsGrounded() ? force : force * airControlFactor;
+        request.Acceleration = _character.feet.IsGrounded() ? force : force * airControlFactor;
 
         _character.RequestContinuousForce(request);
     }
@@ -35,9 +37,9 @@ public class PlyController : MonoBehaviour {
     public void OnJump() {
         if (_character.feet.IsGrounded()) {
             ForceRequest request = new ForceRequest();
-            request.direction = Vector3.up;
-            request.acceleration = jumpForce;
-            request.speed = speed;
+            request.Direction = Vector3.up;
+            request.Acceleration = jumpForce;
+            request.Speed = speed;
             _character.feet.SetJumping();
             _character.RequestInstantForce(request);
         }

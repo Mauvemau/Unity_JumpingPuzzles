@@ -47,10 +47,9 @@ public class MyCamera : MonoBehaviour {
     }
 
     private Vector3 HandleCameraCollision(Vector3 desiredPosition) {
-        Vector3 direction = (desiredPosition - target.position).normalized;
-        RaycastHit hit;
+        var direction = (desiredPosition - target.position).normalized;
 
-        if (Physics.Raycast(target.position, direction, out hit, maxDistance, collisionLayer)) {
+        if (Physics.Raycast(target.position, direction, out var hit, maxDistance, collisionLayer)) {
             float distance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
             return target.position + direction * distance;
         }
