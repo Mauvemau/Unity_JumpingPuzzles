@@ -3,7 +3,12 @@ guid: 802103139a961ce738232033fda37515
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tiny_treats_1
+    second: {fileID: 2100000, guid: c096cb904312b4b3aaacd83658e7666c, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

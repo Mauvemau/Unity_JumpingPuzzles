@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class SceneData {
 #if UNITY_EDITOR
     [SerializeField]
-    private UnityEditor.SceneAsset sceneAsset;
+    private SceneAsset sceneAsset;
 #endif
     [SerializeField]
     [HideInInspector]
