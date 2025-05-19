@@ -6,6 +6,7 @@ public class CharacterFoot : MonoBehaviour {
     [Tooltip("Everything outside of this layer will be ignored by the feet's logic")]
     private LayerMask groundLayer;
     [SerializeField]
+    [Min(0)]
     [Tooltip("Defines the distance in which the foot detects the ground")]
     private float groundCheckDistance = 1f;
     [SerializeField] 
@@ -14,6 +15,7 @@ public class CharacterFoot : MonoBehaviour {
     
     [Header("Jump Settings")] 
     [SerializeField]
+    [Min(0)]
     [Tooltip("Defines how long until the character is allowed to jump again after jumping")]
     private float jumpCooldown = .1f;
     private float _jumpTimestamp;
@@ -21,6 +23,7 @@ public class CharacterFoot : MonoBehaviour {
 
     [Header("Coyote Time Settings")] 
     [SerializeField]
+    [Min(0)]
     [Tooltip("Defines a time window in which the foot will still consider itself as grounded after falling off a platform")]
     private float coyoteTime = .5f;
     private float _lastGroundedTime;
@@ -71,19 +74,21 @@ public class CharacterFoot : MonoBehaviour {
         if (groundedNow) {
             _lastGroundedTime = Time.time; // tracking last grounded time
         }
-
-        if (!_jumping) return; // No need to calculate anything from here on if we're not jumping
-        if (_jumping && Time.time > _jumpTimestamp + jumpCooldown && groundedNow) {
+        
+        if (_jumping && Time.time > _jumpTimestamp + jumpCooldown && groundedNow) { // ! Keep _jumping as first check
             _jumping = false;
         }
     }
 
     private void Awake() {
         if (gameObject.layer == 0) {
-            Debug.LogWarning("Layer for character foot is set to default");
+            Debug.LogWarning($"{name}: Layer for foot's game-object is set to default!");
         }
         if (groundLayer.value == 0) {
-            Debug.LogWarning("Ground layer for character foot raycast is not configured.");
+            Debug.LogWarning($"{name}: {groundLayer}'s value is not configured.");
+        }
+        if (groundCheckDistance <= 0) {
+            Debug.LogWarning($"{name}: {groundCheckDistance} raycast size is set to zero.");
         }
     }
 }

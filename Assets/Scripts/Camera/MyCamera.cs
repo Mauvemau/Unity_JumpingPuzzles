@@ -11,11 +11,14 @@ public class MyCamera : MonoBehaviour {
     [SerializeField]
     private Vector3 offset;
     [Header("Sensitivity")]
-    [SerializeField] 
+    [SerializeField]
+    [Min(0)]
     private float horizontalSpeed = 1f;
-    [SerializeField] 
+    [SerializeField]
+    [Min(0)]
     private float verticalSpeed = 1f;
-    [SerializeField] 
+    [SerializeField]
+    [Min(0)]
     private float rotationSmoothness = 0.1f;
     [Header("Configuration")]
     [SerializeField]
@@ -25,8 +28,10 @@ public class MyCamera : MonoBehaviour {
     [SerializeField]
     public LayerMask collisionLayer;
     [SerializeField]
+    [Min(0)]
     private float minDistance = 1f;
     [SerializeField]
+    [Min(0)]
     private float maxDistance = 7f;
     
     private Vector2 _requestedRotationVelocity;
@@ -50,7 +55,7 @@ public class MyCamera : MonoBehaviour {
         var direction = (desiredPosition - target.position).normalized;
 
         if (Physics.Raycast(target.position, direction, out var hit, maxDistance, collisionLayer)) {
-            float distance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
+            var distance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
             return target.position + direction * distance;
         }
         
@@ -64,33 +69,33 @@ public class MyCamera : MonoBehaviour {
         _pitch -= _smoothedRotation.y * verticalSpeed * Time.deltaTime;
         _pitch = Mathf.Clamp(_pitch, minClampAngle, maxClampAngle);
 
-        Quaternion desiredRotation = Quaternion.Euler(_pitch, _yaw, 0);
+        var desiredRotation = Quaternion.Euler(_pitch, _yaw, 0);
         return target.position + desiredRotation * offset;
     }
 
     private void LateUpdate() {
         if (!target) return;
 
-        Vector3 desiredPosition = HandleCameraMovement();
+        var desiredPosition = HandleCameraMovement();
 
-        Vector3 finalPosition = HandleCameraCollision(desiredPosition);
+        var finalPosition = HandleCameraCollision(desiredPosition);
 
         transform.position = finalPosition;
         transform.LookAt(target);
     }
 
     private void Awake() {
-        if (target == null) {
-            Debug.LogError("The camera needs to be assigned a target!");
-        }
-        if (horizontalSpeed == 0) {
-            Debug.LogWarning("The horizontal speed for the camera is set to 0, the camera will not rotate horizontally!");
-        }
-        if (verticalSpeed == 0) {
-            Debug.LogWarning("The vertical speed for the camera is set to 0, the camera will not rotate vertically!");
+        if (!target) {
+            Debug.Log($"{name}: The camera doesn't currently have a {nameof(target)}, verify if intended.");
         }
         if (collisionLayer.value == 0) {
-            Debug.LogWarning("Collision layer for the camera is not configured.");
+            Debug.Log($"{name}: {nameof(collisionLayer)} is not configured, verify if intended.");
+        }
+        if (horizontalSpeed == 0) {
+            Debug.LogWarning($"{name}: {nameof(horizontalSpeed)} is currently set to 0!");
+        }
+        if (verticalSpeed == 0) {
+            Debug.LogWarning($"{name}: {nameof(verticalSpeed)} is currently set to 0!");
         }
     }
 }

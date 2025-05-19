@@ -126,14 +126,13 @@ public class Character : MonoBehaviour {
         }
     }
 
-    private void Awake()
-    {
+    private void Awake() {
         _rb = GetComponent<Rigidbody>();
-        if (feet == null) {
-            Debug.LogWarning($"Foot are not configured for {gameObject.name}!");
+        if (!cameraReference) {
+            Debug.Log($"{name}: Camera-based anchoring is not configured, verify if intended.");
         }
-        if (cameraReference == null) {
-            Debug.Log($"Camera-based anchoring is not configured for {gameObject.name}, is this intentional?");
+        if (!feet) {
+            Debug.LogWarning($"{name}: Feet are not configured!");
         }
     }
 }
