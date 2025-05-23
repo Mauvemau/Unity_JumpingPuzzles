@@ -1,6 +1,7 @@
 using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.VirtualTexturing;
 
 /// <summary>
 /// Represents a force that can be applied to a rigidBody
@@ -17,10 +18,6 @@ public class ForceRequest
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class Character : MonoBehaviour {
-    [Header("Anchoring Config")]
-    [SerializeField]
-    [Tooltip("Used for camera-based movement and animations")]
-    private MyCamera cameraReference;
     [Header("Foot Config")]
     [Tooltip("Used for logic that requires knowing if the character is grounded")]
     public CharacterFoot feet;
@@ -31,51 +28,37 @@ public class Character : MonoBehaviour {
     [Tooltip("Modifies how it begins to get hard to walk up a slope depending on the maximum angle")]
     private float slopeEffortCurveMultiplier = 3f;
 
-    private Rigidbody _rb;
-    private ForceRequest _instantForceRequest;
-    private ForceRequest _continuousForceRequest;
+    protected Rigidbody Rb;
+    
+    protected ForceRequest InstantForceRequest;
+    protected ForceRequest ContinuousForceRequest;
 
     public void RequestInstantForce(ForceRequest forceRequest) {
-        _instantForceRequest = forceRequest;
+        InstantForceRequest = forceRequest;
     }
 
     public void RequestContinuousForce(ForceRequest forceRequest) {
-        _continuousForceRequest = forceRequest;
+        ContinuousForceRequest = forceRequest;
     }
 
     /// <summary>
     /// Cancels momentum on every axis except the direction the player is moving towards
     /// </summary>
-    private void ResetMomentum(Vector3 currentDirection) {
-        if (_instantForceRequest == null) { 
-            _rb.linearVelocity = Vector3.zero;
+    protected void ResetMomentum(Vector3 currentDirection) {
+        if (InstantForceRequest == null) { 
+            Rb.linearVelocity = Vector3.zero;
             return;
         }
 
-        var preservedDirection = currentDirection;
-        var projectedSpeed = Vector3.Dot(_rb.linearVelocity, preservedDirection);
-        var correctedVelocity = preservedDirection * projectedSpeed;
-        _rb.linearVelocity = new Vector3(correctedVelocity.x, 0, correctedVelocity.z);
-    }   
-
-    /// <summary>
-    /// Affects the direction in which the player moves based on the direction the camera is currently looking at horizontally 
-    /// </summary>
-    private Vector3 CalculateCameraAnchoring() {
-        if (!cameraReference) return Vector3.one; // No camera, no changes
-        var camForward = cameraReference.GetCameraForward().normalized;
-        var camRight = cameraReference.GetCameraRight().normalized;
-        camForward.y = 0;
-        camRight.y = 0;
-        // Convert input into world-space movement
-        return (camRight * _continuousForceRequest.Direction.x) +
-               (camForward * _continuousForceRequest.Direction.z);
+        var projectedSpeed = Vector3.Dot(Rb.linearVelocity, currentDirection);
+        var correctedVelocity = currentDirection * projectedSpeed;
+        Rb.linearVelocity = new Vector3(correctedVelocity.x, 0, correctedVelocity.z);
     }
     
     /// <summary>
     /// Calculates the speed in which the player should move up a slope depending on the inclination of the surface
     /// </summary>
-    private float GetSlopeEffortMultiplier(float slopeAngle) {
+    protected float GetSlopeEffortMultiplier(float slopeAngle) {
         if (slopeAngle <= 0f) return 1f;
         if (slopeAngle >= maxSlopeAngle) return 0f;
         var t = slopeAngle / maxSlopeAngle;
@@ -86,7 +69,7 @@ public class Character : MonoBehaviour {
     /// <summary>
     /// Returns the angle of the current slope based on the current direction (positive if moving up the slope, negative if moving down)
     /// </summary>
-    private float GetSlopeAngle(Vector3 direction, Vector3 groundNormal) {
+    protected static float GetSlopeAngle(Vector3 direction, Vector3 groundNormal) {
         var normalizedDirection = direction.normalized;
         var slopeDirection = Vector3.Cross(Vector3.Cross(Vector3.up, groundNormal), groundNormal).normalized;
         var dot = Vector3.Dot(normalizedDirection, slopeDirection);
@@ -97,40 +80,43 @@ public class Character : MonoBehaviour {
     /// <summary>
     /// Projects a movement vector into a slope (affecting the Y axis)
     /// </summary>
-    private Vector3 ProjectSlope(Vector3 currentDirection, Vector3 groundNormal) {
+    protected static Vector3 ProjectSlope(Vector3 currentDirection, Vector3 groundNormal) {
         return Vector3.ProjectOnPlane(currentDirection, groundNormal).normalized;
+    }
+
+    private void HandleMovement() {
+        if (ContinuousForceRequest == null) return;
+        var currentDirection = ContinuousForceRequest.Direction;
+        var groundNormal = feet.GetGroundNormal(currentDirection);
+            
+        var projectedDirection = ProjectSlope(currentDirection, groundNormal);
+            
+        var slopeAngle = GetSlopeAngle(currentDirection, groundNormal);
+        var slopeMultiplier = GetSlopeEffortMultiplier(slopeAngle);
+
+        projectedDirection.y *= slopeMultiplier; // We reduce "Y" force based on slope steepness.
+            
+        var speedPercentage = Rb.linearVelocity.magnitude / ContinuousForceRequest.Speed;
+        var remainingSpeedPercentage = Mathf.Clamp01(1f - speedPercentage);
+        Rb.AddForce(projectedDirection * (ContinuousForceRequest.Acceleration * remainingSpeedPercentage), ForceMode.Force);
+    }
+
+    private void HandleJumping() {
+        if (InstantForceRequest == null) return;
+        var currentDirection = ContinuousForceRequest.Direction;
+        // Resetting vertical velocity before jumping so that the jump always has the same impulse.
+        ResetMomentum(currentDirection);
+        Rb.AddForce(InstantForceRequest.Direction * InstantForceRequest.Acceleration, ForceMode.Impulse);
+        InstantForceRequest = null;
     }
     
     private void FixedUpdate() {
-        if (_continuousForceRequest != null) {
-            var cameraDirection = CalculateCameraAnchoring();
-            var groundNormal = feet.GetGroundNormal(cameraDirection);
-            
-            var projectedDirection = ProjectSlope(cameraDirection, groundNormal);
-            
-            float slopeAngle = GetSlopeAngle(cameraDirection, groundNormal);
-            float slopeMultiplier = GetSlopeEffortMultiplier(slopeAngle);
-
-            projectedDirection.y *= slopeMultiplier; // Reduce Y force based on slope steepness.
-            
-            var speedPercentage = _rb.linearVelocity.magnitude / _continuousForceRequest.Speed;
-            var remainingSpeedPercentage = Mathf.Clamp01(1f - speedPercentage);
-            _rb.AddForce(projectedDirection * (_continuousForceRequest.Acceleration * remainingSpeedPercentage), ForceMode.Force);
-        }
-        if (_instantForceRequest != null) {
-            var cameraDirection = CalculateCameraAnchoring(); // IDK if; Better to calculate it twice in one frame than once every frame?
-            // Resetting vertical velocity before jumping so that the jump always has the same impulse.
-            ResetMomentum(cameraDirection);
-            _rb.AddForce(_instantForceRequest.Direction * _instantForceRequest.Acceleration, ForceMode.Impulse);
-            _instantForceRequest = null;
-        }
+        HandleMovement();
+        HandleJumping();
     }
 
     private void Awake() {
-        _rb = GetComponent<Rigidbody>();
-        if (!cameraReference) {
-            Debug.Log($"{name}: Camera-based anchoring is not configured, verify if intended.");
-        }
+        Rb = GetComponent<Rigidbody>();
         if (!feet) {
             Debug.LogWarning($"{name}: Feet are not configured!");
         }

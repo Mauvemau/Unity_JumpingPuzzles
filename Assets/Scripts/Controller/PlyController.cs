@@ -11,18 +11,18 @@ public class PlyController : MonoBehaviour {
     [Header("Movement")]
     [SerializeField]
     [Min(0)]
-    private float speed = 10f;
+    private float speed = 25f;
     [SerializeField]
     [Min(0)]
-    private float force = 10f;
+    private float force = 30f;
     [SerializeField]
     [Min(0)]
     [Tooltip("Multiplies the amount of force applied to the character when airborne")]
-    private float airControlFactor = 1.5f;
+    private float airControlFactor = .8f;
     [Header("Jump")]
     [Min(0)]
     [SerializeField]
-    private float jumpForce = 5f;
+    private float jumpForce = 8f;
     [SerializeField]
     [Min(0)]
     [Tooltip("Defines the time window in which a jump input will be accepted if it's pressed before the character has landed")]

@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 7930806395620563313}
   - component: {fileID: 2073355324432800273}
   - component: {fileID: 2663485561092212863}
-  - component: {fileID: 2445290778191955711}
-  - component: {fileID: 6817653484869864293}
+  - component: {fileID: 8056685593773219651}
+  - component: {fileID: 3691461192095662392}
   m_Layer: 6
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -141,23 +141,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2445290778191955711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3850721933234634649}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb4e03230278447468cd16496cd9e095, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraReference: {fileID: 0}
-  feet: {fileID: 5952194341883549281}
-  maxSlopeAngle: 60
-  slopeEffortCurveMultiplier: 3
---- !u!114 &6817653484869864293
+--- !u!114 &8056685593773219651
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -174,6 +158,22 @@ MonoBehaviour:
   airControlFactor: 0.8
   jumpForce: 8
   earlyJumpWindow: 0.2
+--- !u!114 &3691461192095662392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3850721933234634649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f370322881aa9036bca0e78940bf6a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  feet: {fileID: 5952194341883549281}
+  maxSlopeAngle: 70
+  slopeEffortCurveMultiplier: 3
+  cameraReference: {fileID: 0}
 --- !u!1 &5562682128291620555
 GameObject:
   m_ObjectHideFlags: 0
