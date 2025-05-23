@@ -14,15 +14,14 @@ public class GameManager : MonoBehaviour {
 
     public static event Action OnPlayerSpawned;
 
+    [ContextMenu("Force Init Game")]
     public void InitGame() {
-        
         _playerInstance.SetActive(true);
         var characterPlayerComponent = _playerInstance.GetComponent<PlayerCharacter>();
         var controllerPlayerComponent = _playerInstance.GetComponent<PlyController>();
         ServiceLocator.SetService(characterPlayerComponent);
         ServiceLocator.SetService(controllerPlayerComponent);
         OnPlayerSpawned?.Invoke();
-        
     }
 
     private void LoadInstances() {

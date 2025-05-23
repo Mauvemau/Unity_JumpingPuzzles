@@ -145,4 +145,12 @@ public class InputReader : MonoBehaviour {
             Debug.LogWarning($"{name}: {nameof(holdToggleMouseLockAction)} is null!");
         }
     }
+
+    private void OnEnable() {
+        GameManager.OnPlayerSpawned += OnPlayerSpawned;
+    }
+    
+    private void OnDisable() {
+        GameManager.OnPlayerSpawned -= OnPlayerSpawned;
+    }
 }
