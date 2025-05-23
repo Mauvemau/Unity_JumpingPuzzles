@@ -6,12 +6,12 @@ public class PlayerCharacter : Character {
     [Header("Anchoring Config")]
     [SerializeField]
     [Tooltip("Used for camera-based movement and animations")]
-    private MyCamera cameraReference;
+    private MainCamera cameraReference;
 
     /// <summary>
     /// Allows the camera to assign a reference to itself to the player
     /// </summary>
-    public void AssignCameraReference(MyCamera receivedCameraReference) {
+    public void AssignCameraReference(MainCamera receivedCameraReference) {
         cameraReference = receivedCameraReference;
     }
     

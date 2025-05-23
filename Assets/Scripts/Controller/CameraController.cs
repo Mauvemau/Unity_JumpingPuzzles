@@ -5,9 +5,9 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// Decides actions performed by the camera based on input received
 /// </summary>
-[RequireComponent(typeof(MyCamera))]
+[RequireComponent(typeof(MainCamera))]
 public class CameraController : MonoBehaviour {
-    private MyCamera _camera;
+    private MainCamera _camera;
     [SerializeField]
     [Min(0)]
     private float mouseSensitivity = 1.0f;
@@ -22,7 +22,7 @@ public class CameraController : MonoBehaviour {
     }
 
     private void Awake() {
-        _camera = GetComponent<MyCamera>();
+        _camera = GetComponent<MainCamera>();
         if(!_camera) {
             Debug.LogError($"{name}: {nameof(_camera)} is null!");
         }

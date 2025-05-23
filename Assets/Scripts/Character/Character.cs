@@ -41,6 +41,10 @@ public class Character : MonoBehaviour {
         ContinuousForceRequest = forceRequest;
     }
 
+    public void RequestSetPosition(Vector3 position) {
+        transform.position = position;
+    }
+    
     /// <summary>
     /// Cancels momentum on every axis except the direction the player is moving towards
     /// </summary>

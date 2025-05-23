@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Controls the behaviour of the camera and it's position
 /// </summary>
-public class MyCamera : MonoBehaviour {
+public class MainCamera : MonoBehaviour {
     [SerializeField] 
     private Transform target;
     [Header("Position")]
@@ -38,7 +38,7 @@ public class MyCamera : MonoBehaviour {
     private Vector2 _smoothedRotation; // We declare these here so that we don't do it in every late update loop
     private float _pitch = 0;
     private float _yaw = 0;
-
+    
     public Vector3 GetCameraForward() {
         return transform.forward;
     }
@@ -49,6 +49,12 @@ public class MyCamera : MonoBehaviour {
     
     public void RequestRotation(Vector2 rotationDirection) {
         _requestedRotationVelocity = rotationDirection;
+    }
+
+    private void OnPlayerSpawned() {
+        if (!ServiceLocator.TryGetService<PlayerCharacter>(out var player)) return;
+        target = player.transform;
+        player.AssignCameraReference(this);
     }
 
     private Vector3 HandleCameraCollision(Vector3 desiredPosition) {
@@ -97,5 +103,13 @@ public class MyCamera : MonoBehaviour {
         if (verticalSpeed == 0) {
             Debug.LogWarning($"{name}: {nameof(verticalSpeed)} is currently set to 0!");
         }
+    }
+
+    private void OnEnable() {
+        GameManager.OnPlayerSpawned += OnPlayerSpawned;
+    }
+
+    private void OnDisable() {
+        GameManager.OnPlayerSpawned -= OnPlayerSpawned;
     }
 }

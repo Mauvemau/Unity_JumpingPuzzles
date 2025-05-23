@@ -51,6 +51,11 @@ public class InputReader : MonoBehaviour {
     
     private bool _mouseLocked = false; // ? IDE says it's redundant because bool are set to false by default, but I prefer doing it anyway
 
+    private void OnPlayerSpawned() {
+        if (!ServiceLocator.TryGetService<PlyController>(out var playerController)) return;
+        playerControllerReference = playerController;
+    }
+    
     private void SetMouseLocked(bool locked) {
         _mouseLocked = locked;
         if (_mouseLocked) {

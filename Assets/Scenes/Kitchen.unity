@@ -957,6 +957,54 @@ Transform:
   m_Children: []
   m_Father: {fileID: 946911780}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &644371565
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 644371567}
+  - component: {fileID: 644371566}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &644371566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 644371565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc508ab2b65f9cf1fbc6287dba7c6769, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 3850721933234634649, guid: 722dd9bc3912b08bb83e91e0d604d947, type: 3}
+  mainCamera: {fileID: 0}
+  playerSpawnPosition: {x: -11.3, y: 8.2, z: -7.5}
+  playerInstance: {fileID: 0}
+--- !u!4 &644371567
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 644371565}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &658524889
 GameObject:
   m_ObjectHideFlags: 0
@@ -2265,10 +2313,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3691461192095662392, guid: 722dd9bc3912b08bb83e91e0d604d947, type: 3}
-      propertyPath: maxSlopeAngle
-      value: 70
-      objectReference: {fileID: 0}
-    - target: {fileID: 3691461192095662392, guid: 722dd9bc3912b08bb83e91e0d604d947, type: 3}
       propertyPath: cameraReference
       value: 
       objectReference: {fileID: 330585549}
@@ -2285,6 +2329,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 644371567}
   - {fileID: 330585546}
   - {fileID: 3090589234748187066}
   - {fileID: 1263848750}
