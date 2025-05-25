@@ -33,6 +33,8 @@ public class InputManager : MonoBehaviour {
     private PlayerCharacterController playerControllerReference;
     [SerializeField]
     private CameraController cameraControllerReference;
+    [SerializeField]
+    private GameManager gameManagerReference;
     [Header("Player Actions")]
     [SerializeField]
     private InputActionReference moveAction;
@@ -40,6 +42,8 @@ public class InputManager : MonoBehaviour {
     private InputActionReference lookAction;
     [SerializeField]
     private InputActionReference jumpAction;
+    [SerializeField]
+    private InputActionReference respawnAction;
 
     [Header("UI Actions")] 
     [SerializeField]
@@ -60,6 +64,9 @@ public class InputManager : MonoBehaviour {
     private void OnPlayerSpawned() {
         if (!ServiceLocator.TryGetService<PlayerCharacterController>(out var playerController)) return;
         playerControllerReference = playerController;
+        if (ServiceLocator.TryGetService<GameManager>(out var gameManager)) {
+            gameManagerReference = gameManager;
+        }
     }
 
     private void HandleTogglePauseMenuInput(InputAction.CallbackContext ctx) {
@@ -101,6 +108,11 @@ public class InputManager : MonoBehaviour {
         }
     }
 
+    private void HandleRespawnInput(InputAction.CallbackContext ctx) {
+        if (!gameManagerReference) return;
+        gameManagerReference.RespawnPlayer();
+    }
+    
     private void HandleLookInput(InputAction.CallbackContext ctx) {
         if (!cameraControllerReference) return;
         // We don't add camera input to the action buffer
@@ -136,6 +148,12 @@ public class InputManager : MonoBehaviour {
         if (!jumpAction) {
             Debug.LogWarning($"{name}: {nameof(jumpAction)} is null!");
         }
+        if (!respawnAction) {
+            Debug.LogWarning($"{name}: {nameof(respawnAction)} is null!");
+        }
+        if (!togglePauseMenuAction) {
+            Debug.LogWarning($"{name}: {nameof(togglePauseMenuAction)} is null!");
+        }
         if (!toggleMouseLockAction) {
             Debug.LogWarning($"{name}: {nameof(toggleMouseLockAction)} is null!");
         }
@@ -164,6 +182,9 @@ public class InputManager : MonoBehaviour {
             jumpAction.action.started += HandleJumpInput;
             jumpAction.action.canceled += HandleJumpInput;
         }
+        if (respawnAction) {
+            respawnAction.action.started += HandleRespawnInput;
+        }
         if (togglePauseMenuAction) {
             togglePauseMenuAction.action.started += HandleTogglePauseMenuInput;
         }
@@ -183,9 +204,9 @@ public class InputManager : MonoBehaviour {
         //
         
         if(moveAction) {
-            moveAction.action.started -= HandleMoveInput; // When the value stops being 0
-            moveAction.action.performed -= HandleMoveInput; // Is only executed when values change
-            moveAction.action.canceled -= HandleMoveInput; // When the value returns to 0
+            moveAction.action.started -= HandleMoveInput;
+            moveAction.action.performed -= HandleMoveInput;
+            moveAction.action.canceled -= HandleMoveInput;
         }
         if (lookAction) {
             lookAction.action.started -= HandleLookInput;
@@ -194,14 +215,17 @@ public class InputManager : MonoBehaviour {
         }
         if (jumpAction) {
             jumpAction.action.started -= HandleJumpInput;
-            //jumpAction.action.canceled -= HandleJumpInput;
+            jumpAction.action.canceled -= HandleJumpInput;
+        }
+        if (respawnAction) {
+            respawnAction.action.started -= HandleRespawnInput;
         }
         if (togglePauseMenuAction) {
             togglePauseMenuAction.action.started -= HandleTogglePauseMenuInput;
         }
         if (holdToggleMouseLockAction) {
             holdToggleMouseLockAction.action.started -= HandleToggleMouseLockInput;
-            holdToggleMouseLockAction.action.canceled -= HandleToggleMouseLockInput; // We toggle it back on cancel
+            holdToggleMouseLockAction.action.canceled -= HandleToggleMouseLockInput;
         }
         if (toggleMouseLockAction) {
             toggleMouseLockAction.action.started -= HandleToggleMouseLockInput;

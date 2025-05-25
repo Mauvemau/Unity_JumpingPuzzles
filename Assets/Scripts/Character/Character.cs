@@ -47,13 +47,14 @@ public class Character : MonoBehaviour {
     }
     
     public void RequestSetPosition(Vector3 position) {
+        Rb.linearVelocity = Vector3.zero;
         transform.position = position;
     }
     
     /// <summary>
     /// Cancels momentum on every axis except the direction the player is moving towards
     /// </summary>
-    protected void ResetMomentum(Vector3 currentDirection) {
+    protected void ResetVerticalMomentum(Vector3 currentDirection) {
         if (InstantForceRequest == null) { 
             Rb.linearVelocity = Vector3.zero;
             return;
@@ -113,7 +114,7 @@ public class Character : MonoBehaviour {
         if (InstantForceRequest == null) return;
         var currentDirection = ContinuousForceRequest.Direction;
         // Resetting vertical velocity before jumping so that the jump always has the same impulse.
-        ResetMomentum(currentDirection);
+        ResetVerticalMomentum(currentDirection);
         Rb.AddForce(InstantForceRequest.Direction * InstantForceRequest.Acceleration, ForceMode.Impulse);
         InstantForceRequest = null;
     }

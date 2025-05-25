@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour {
 
     [Header("Game Configuration")]
     [SerializeField]
-    private Vector3 playerSpawnPosition;
+    private Vector3 defaultPlayerSpawnPosition;
     
     [Header("Event Listeners")]
     [SerializeField]
@@ -28,7 +28,20 @@ public class GameManager : MonoBehaviour {
     public static event Action OnPlayerSpawned;
     
     private GameObject _playerInstance;
+    private Vector3 _currentPlayerSpawnPosition;
     private bool _gameInitialized = false;
+    
+    public void RespawnPlayer() {
+        var player = _playerInstance.GetComponent<PlayerCharacter>();
+        player.RequestSetPosition(_currentPlayerSpawnPosition);
+    }
+    
+    /// <summary>
+    /// Changes the position of current player spawn position
+    /// </summary>
+    public void SetPlayerRespawnPosition(Vector3 position) {
+        _currentPlayerSpawnPosition = position;
+    }
     
     /// <summary>
     /// Makes pause menu visible or not
@@ -70,8 +83,9 @@ public class GameManager : MonoBehaviour {
 
     private void ResetInstances() {
         _gameInitialized = false;
+        _currentPlayerSpawnPosition = defaultPlayerSpawnPosition;
         var player = _playerInstance.GetComponent<PlayerCharacter>();
-        player.RequestSetPosition(playerSpawnPosition);
+        player.RequestSetPosition(defaultPlayerSpawnPosition);
         _playerInstance.SetActive(false);
     }
     
@@ -81,7 +95,8 @@ public class GameManager : MonoBehaviour {
     }
     
     private void LoadInstances() {
-        _playerInstance = Instantiate(playerPrefab, playerSpawnPosition, Quaternion.identity);
+        _currentPlayerSpawnPosition = defaultPlayerSpawnPosition;
+        _playerInstance = Instantiate(playerPrefab, _currentPlayerSpawnPosition, Quaternion.identity);
         _playerInstance.SetActive(false);
     }
     
@@ -90,6 +105,7 @@ public class GameManager : MonoBehaviour {
             Debug.LogError($"{name}: There is no player player prefab assigned!");
             return;
         }
+        ServiceLocator.SetService(this);
         LoadInstances();
     }
 

@@ -34,7 +34,7 @@ public class PlayerCharacter : Character {
         if (InstantForceRequest == null) return;
         var cameraDirection = CalculateCameraAnchoring();
         // Resetting vertical velocity before jumping so that the jump always has the same impulse.
-        ResetMomentum(cameraDirection);
+        ResetVerticalMomentum(cameraDirection);
         Rb.AddForce(InstantForceRequest.Direction * InstantForceRequest.Acceleration, ForceMode.Impulse);
         InstantForceRequest = null;
     }
