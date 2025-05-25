@@ -32,6 +32,10 @@ public class MySceneManager : MonoBehaviour {
 
     private readonly List<AsyncOperation> _loadOperations = new List<AsyncOperation>();
 
+    [SerializeField]
+    [HideInInspector]
+    private List<int> _bootLoadQueue = new List<int>();
+
     // In case we want to make a loading screen for the boot load later
     public static event Action OnStartLoadingScenes;
     public static event Action OnFinishedLoadingScenes;
@@ -41,9 +45,7 @@ public class MySceneManager : MonoBehaviour {
 
         _loadOperations.Clear();
 
-#if UNITY_EDITOR
-        foreach (var sceneData in loadOnBoot) {
-            var index = sceneData.Index;
+        foreach (var index in _bootLoadQueue) {
             if (index >= 0 && !SceneUtils.IsSceneLoaded(index)) {
                 var op = SceneManager.LoadSceneAsync(index, LoadSceneMode.Additive);
                 if (op != null) {
@@ -51,7 +53,6 @@ public class MySceneManager : MonoBehaviour {
                 }
             }
         }
-#endif
 
         foreach (var op in _loadOperations) {
             while (!op.isDone) {
@@ -102,20 +103,20 @@ public class MySceneManager : MonoBehaviour {
     }
 
     private void Start() {
-#if UNITY_EDITOR
-        if (loadOnBoot.Count > 0) {
+        if (_bootLoadQueue.Count > 0) {
             StartCoroutine(LoadBootScenes());
         }
         else {
-            Debug.LogWarning($"{name}: There are no scenes in {nameof(loadOnBoot)}!");
+            Debug.LogWarning($"{name}: There are no scenes in {nameof(_bootLoadQueue)}!");
         }
-#endif
     }
     
     private void OnValidate() {
 #if UNITY_EDITOR
+        _bootLoadQueue.Clear();
         foreach (var scene in loadOnBoot) {
             scene?.OnValidate();
+            _bootLoadQueue.Add(scene.Index);
         }
 #endif
     }
