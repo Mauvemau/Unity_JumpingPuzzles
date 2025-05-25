@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 /// <summary>
 /// Decides actions performed by the camera based on input received

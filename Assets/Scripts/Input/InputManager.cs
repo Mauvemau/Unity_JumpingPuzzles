@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -28,7 +27,7 @@ public static class ActionBuffer {
 /// <summary>
 /// Handles input for entities controlled by the player
 /// </summary>
-public class InputReader : MonoBehaviour {
+public class InputManager : MonoBehaviour {
     [Header("Controller references")]
     [SerializeField]
     private PlyController playerControllerReference;
@@ -41,7 +40,10 @@ public class InputReader : MonoBehaviour {
     private InputActionReference lookAction;
     [SerializeField]
     private InputActionReference jumpAction;
-    [Header("UI Actions")]
+
+    [Header("UI Actions")] 
+    [SerializeField]
+    private InputActionReference togglePauseMenuAction;
     [SerializeField]
     [Tooltip("Toggles between locked and unlocked camera")]
     private InputActionReference toggleMouseLockAction;
@@ -49,11 +51,15 @@ public class InputReader : MonoBehaviour {
     [Tooltip("Toggles between locked and unlocked camera only when the player is holding the button")]
     private InputActionReference holdToggleMouseLockAction;
     
-    private bool _mouseLocked = false; // ? IDE says it's redundant because bool are set to false by default, but I prefer doing it anyway
+    private bool _mouseLocked = false;
 
     private void OnPlayerSpawned() {
         if (!ServiceLocator.TryGetService<PlyController>(out var playerController)) return;
         playerControllerReference = playerController;
+    }
+
+    private void HandleTogglePauseMenuInput(InputAction.CallbackContext ctx) {
+        UIManager.InvokeOnPauseMenuToggleRequest(true);
     }
     
     private void SetMouseLocked(bool locked) {
@@ -68,6 +74,10 @@ public class InputReader : MonoBehaviour {
         }
     }
 
+    private void HandleToggleMouseLockUI(bool uiPanelActive) {
+        SetMouseLocked(!uiPanelActive); // We want to unlock the mouse when a panel is active
+    }
+    
     private void HandleToggleMouseLockInput(InputAction.CallbackContext ctx) {
         SetMouseLocked(!_mouseLocked);
     }
@@ -97,37 +107,12 @@ public class InputReader : MonoBehaviour {
         playerControllerReference.OnMove(ctx.ReadValue<Vector2>());
     }
 
-    private void Update() {
-        //if (!Application.isFocused) return; // We don't want to capture input when the game is unfocused
-        if(moveAction) {
-            moveAction.action.started += HandleMoveInput; // When the value stops being 0
-            moveAction.action.performed += HandleMoveInput; // Is only executed when values change
-            moveAction.action.canceled += HandleMoveInput; // When the value returns to 0
-        }
-        if (lookAction) {
-            lookAction.action.started += HandleLookInput;
-            lookAction.action.performed += HandleLookInput;
-            lookAction.action.canceled += HandleLookInput;
-        }
-        if (jumpAction) {
-            jumpAction.action.started += HandleJumpInput;
-            //jumpAction.action.canceled += HandleJumpInput;
-        }
-        if (holdToggleMouseLockAction) {
-            holdToggleMouseLockAction.action.started += HandleToggleMouseLockInput;
-            holdToggleMouseLockAction.action.canceled += HandleToggleMouseLockInput; // We toggle it back on cancel
-        }
-        if (toggleMouseLockAction) {
-            toggleMouseLockAction.action.started += HandleToggleMouseLockInput;
-        }
-    }
-
     private void Awake() {
         if(!playerControllerReference) {
-            Debug.Log($"{name} doesn't currently have a player controller reference."); // We simply log it because it could be intended
+            Debug.Log($"{name} doesn't currently have a player controller reference, verify if intended.");
         }
         if (!cameraControllerReference) {
-            Debug.Log($"{name} doesn't currently have a camera controller reference.");
+            Debug.Log($"{name} doesn't currently have a camera controller reference, verify if intended.");
         }
         if (!moveAction) {
             Debug.LogWarning($"{name}: {nameof(moveAction)} is null!");
@@ -148,9 +133,65 @@ public class InputReader : MonoBehaviour {
 
     private void OnEnable() {
         GameManager.OnPlayerSpawned += OnPlayerSpawned;
+        UIManager.OnMenuToggled += HandleToggleMouseLockUI;
+        
+        //
+        
+        if(moveAction) {
+            moveAction.action.started += HandleMoveInput; // When the value stops being 0
+            moveAction.action.performed += HandleMoveInput; // Is only executed when values change
+            moveAction.action.canceled += HandleMoveInput; // When the value returns to 0
+        }
+        if (lookAction) {
+            lookAction.action.started += HandleLookInput;
+            lookAction.action.performed += HandleLookInput;
+            lookAction.action.canceled += HandleLookInput;
+        }
+        if (jumpAction) {
+            jumpAction.action.started += HandleJumpInput;
+            //jumpAction.action.canceled += HandleJumpInput;
+        }
+        if (togglePauseMenuAction) {
+            togglePauseMenuAction.action.started += HandleTogglePauseMenuInput;
+        }
+        if (holdToggleMouseLockAction) {
+            holdToggleMouseLockAction.action.started += HandleToggleMouseLockInput;
+            holdToggleMouseLockAction.action.canceled += HandleToggleMouseLockInput; // We toggle it back on cancel
+        }
+        if (toggleMouseLockAction) {
+            toggleMouseLockAction.action.started += HandleToggleMouseLockInput;
+        }
     }
     
     private void OnDisable() {
         GameManager.OnPlayerSpawned -= OnPlayerSpawned;
+        UIManager.OnMenuToggled -= HandleToggleMouseLockUI;
+        
+        //
+        
+        if(moveAction) {
+            moveAction.action.started -= HandleMoveInput; // When the value stops being 0
+            moveAction.action.performed -= HandleMoveInput; // Is only executed when values change
+            moveAction.action.canceled -= HandleMoveInput; // When the value returns to 0
+        }
+        if (lookAction) {
+            lookAction.action.started -= HandleLookInput;
+            lookAction.action.performed -= HandleLookInput;
+            lookAction.action.canceled -= HandleLookInput;
+        }
+        if (jumpAction) {
+            jumpAction.action.started -= HandleJumpInput;
+            //jumpAction.action.canceled -= HandleJumpInput;
+        }
+        if (togglePauseMenuAction) {
+            togglePauseMenuAction.action.started -= HandleTogglePauseMenuInput;
+        }
+        if (holdToggleMouseLockAction) {
+            holdToggleMouseLockAction.action.started -= HandleToggleMouseLockInput;
+            holdToggleMouseLockAction.action.canceled -= HandleToggleMouseLockInput; // We toggle it back on cancel
+        }
+        if (toggleMouseLockAction) {
+            toggleMouseLockAction.action.started -= HandleToggleMouseLockInput;
+        }
     }
 }

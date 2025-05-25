@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 /// <summary>
@@ -33,7 +32,9 @@ public class MainCamera : MonoBehaviour {
     [SerializeField]
     [Min(0)]
     private float maxDistance = 7f;
-    
+
+    private Vector3 _defaultPosition;
+    private Quaternion _defaultRotation;
     private Vector2 _requestedRotationVelocity;
     private Vector2 _smoothedRotation; // We declare these here so that we don't do it in every late update loop
     private float _pitch = 0;
@@ -79,8 +80,17 @@ public class MainCamera : MonoBehaviour {
         return target.position + desiredRotation * offset;
     }
 
+    private void HandleIdleLogic() {
+        transform.position = _defaultPosition;
+        transform.rotation = _defaultRotation;
+    }
+    
     private void LateUpdate() {
         if (!target) return;
+        if (!target.gameObject.activeInHierarchy) {
+            HandleIdleLogic();
+            return;
+        }
 
         var desiredPosition = HandleCameraMovement();
 
@@ -91,6 +101,8 @@ public class MainCamera : MonoBehaviour {
     }
 
     private void Awake() {
+        _defaultPosition = transform.position;
+        _defaultRotation = transform.rotation;
         if (!target) {
             Debug.Log($"{name}: The camera doesn't currently have a {nameof(target)}, verify if intended.");
         }

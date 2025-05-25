@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e4994c659d2d1694b817f6accbcf86c, type: 3}
-  m_Name: LoadScene_Kitchen
+  m_Script: {fileID: 11500000, guid: 9b1b9af2a47c91ca48a4ad028e884156, type: 3}
+  m_Name: SO_TogglePauseMenu
   m_EditorClassIdentifier: 

@@ -988,6 +988,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 3850721933234634649, guid: 722dd9bc3912b08bb83e91e0d604d947, type: 3}
   playerSpawnPosition: {x: -11.3, y: 8.2, z: -7.5}
+  initGameChannel: {fileID: 11400000, guid: a3e93b37003799d0dbb477d96d2435f9, type: 2}
+  endGameChannel: {fileID: 11400000, guid: 7552185396365e66db10f22f8d622bf1, type: 2}
+  exitApplicationChannel: {fileID: 11400000, guid: 79e6da72b69ea6ad882af29eef5fb0ca, type: 2}
+  toggleMainMenuChannel: {fileID: 11400000, guid: e2ce4f6ac34041ec58019dca8e3ab7a5, type: 2}
+  togglePauseMenuChannel: {fileID: 11400000, guid: 12939cdb83fa11ba0b19a180d55fcd92, type: 2}
 --- !u!4 &644371567
 Transform:
   m_ObjectHideFlags: 0
@@ -1656,6 +1661,7 @@ MonoBehaviour:
   moveAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   lookAction: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   jumpAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  togglePauseMenuAction: {fileID: -4833911820304161574, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   toggleMouseLockAction: {fileID: -3148549356763802001, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   holdToggleMouseLockAction: {fileID: 5824709970350978779, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1 &1467148654

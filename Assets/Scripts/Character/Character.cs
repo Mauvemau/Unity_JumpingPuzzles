@@ -1,7 +1,4 @@
-using TMPro.EditorUtilities;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Rendering.VirtualTexturing;
 
 /// <summary>
 /// Represents a force that can be applied to a rigidBody

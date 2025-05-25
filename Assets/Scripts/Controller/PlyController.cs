@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 /// <summary>
 /// Decides actions taken by the player based on input received.

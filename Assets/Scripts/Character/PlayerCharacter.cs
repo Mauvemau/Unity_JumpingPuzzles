@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering.VirtualTexturing;
 
 [RequireComponent(typeof(PlyController))]
 public class PlayerCharacter : Character {
