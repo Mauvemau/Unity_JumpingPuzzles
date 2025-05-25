@@ -50,6 +50,10 @@ public class InputManager : MonoBehaviour {
     [SerializeField]
     [Tooltip("Toggles between locked and unlocked camera only when the player is holding the button")]
     private InputActionReference holdToggleMouseLockAction;
+
+    [Header("EventInvokers")] 
+    [SerializeField]
+    private BoolEventChannel uIToggleInputChannel;
     
     private bool _mouseLocked = false;
 
@@ -65,10 +69,12 @@ public class InputManager : MonoBehaviour {
     private void SetMouseLocked(bool locked) {
         _mouseLocked = locked;
         if (_mouseLocked) {
+            uIToggleInputChannel.RaiseEvent(false); // We disable all UI input when the mouse is locked.
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         } 
         else {
+            uIToggleInputChannel.RaiseEvent(true);
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }

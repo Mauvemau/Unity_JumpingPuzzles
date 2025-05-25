@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Enables or disables a canvas with an event listener
+/// Enables or disables a canvas. [!] This only will disable it visually.
 /// </summary>
 [RequireComponent(typeof(Canvas))]
 public class UICanvasToggle : MonoBehaviour {

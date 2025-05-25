@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour {
     
     [ContextMenu("Force Init Game")]
     private void InitGame() {
+        if (_gameInitialized) return;
         ToggleMainMenuVisibility(false);
         _gameInitialized = true;
         
@@ -67,12 +68,18 @@ public class GameManager : MonoBehaviour {
         OnPlayerSpawned?.Invoke();
     }
 
-    [ContextMenu("Force End Game")]
-    private void EndGame() {
+    private void ResetInstances() {
         _gameInitialized = false;
+        var player = _playerInstance.GetComponent<PlayerCharacter>();
+        player.RequestSetPosition(playerSpawnPosition);
         _playerInstance.SetActive(false);
     }
-
+    
+    [ContextMenu("Force End Game")]
+    private void EndGame() {
+        ResetInstances();
+    }
+    
     private void LoadInstances() {
         _playerInstance = Instantiate(playerPrefab, playerSpawnPosition, Quaternion.identity);
         _playerInstance.SetActive(false);

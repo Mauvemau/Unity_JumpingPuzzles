@@ -713,7 +713,7 @@ MonoBehaviour:
   verticalSpeed: 0.8
   rotationSmoothness: 0.8
   minClampAngle: -70
-  maxClampAngle: 80
+  maxClampAngle: 70
   collisionLayer:
     serializedVersion: 2
     m_Bits: 1
@@ -1623,7 +1623,7 @@ GameObject:
   - component: {fileID: 1263848750}
   - component: {fileID: 1263848751}
   m_Layer: 0
-  m_Name: InputReader
+  m_Name: InputManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1664,6 +1664,7 @@ MonoBehaviour:
   togglePauseMenuAction: {fileID: -4833911820304161574, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   toggleMouseLockAction: {fileID: -3148549356763802001, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   holdToggleMouseLockAction: {fileID: 5824709970350978779, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  uIToggleInputChannel: {fileID: 11400000, guid: ae6505d48bdc2dacab769c3aaed87467, type: 2}
 --- !u!1 &1467148654
 GameObject:
   m_ObjectHideFlags: 0

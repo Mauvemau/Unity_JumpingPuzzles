@@ -325,7 +325,7 @@ MonoBehaviour:
     sceneIndex: 1
   - sceneAsset: {fileID: 102900000, guid: 792f00e4cf00ab394af42c0f062667b6, type: 3}
     sceneIndex: 3
-  _bootLoadQueue: 020000000100000003000000020000000100000003000000020000000100000003000000020000000100000003000000020000000100000003000000020000000100000003000000020000000100000003000000
+  _bootLoadQueue: 020000000100000003000000
 --- !u!4 &1167026665
 Transform:
   m_ObjectHideFlags: 0
@@ -352,6 +352,7 @@ GameObject:
   - component: {fileID: 1626216564}
   - component: {fileID: 1626216563}
   - component: {fileID: 1626216562}
+  - component: {fileID: 1626216565}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -420,6 +421,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1626216565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626216561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aa59e4d36b7634af8f7a58d0b2898a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activeOnAwake: 1
+  toggleEventSystemChannel: {fileID: 11400000, guid: ae6505d48bdc2dacab769c3aaed87467, type: 2}
 --- !u!1 &1804288588
 GameObject:
   m_ObjectHideFlags: 0
