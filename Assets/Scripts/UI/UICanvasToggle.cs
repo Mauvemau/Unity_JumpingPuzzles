@@ -29,10 +29,12 @@ public class UICanvasToggle : MonoBehaviour {
     }
 
     private void OnEnable() {
-        toggleCanvasChannel.OnEventRaised += ToggleCanvas;
+        if(toggleCanvasChannel)
+            toggleCanvasChannel.OnEventRaised += ToggleCanvas;
     }
 
     private void OnDisable() {
-        toggleCanvasChannel.OnEventRaised -= ToggleCanvas;
+        if(toggleCanvasChannel)
+            toggleCanvasChannel.OnEventRaised -= ToggleCanvas;
     }
 }

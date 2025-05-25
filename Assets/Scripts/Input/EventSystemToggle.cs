@@ -19,6 +19,9 @@ public class EventSystemToggle : MonoBehaviour {
     
     private void ToggleEventSystem(bool toggleActive) {
         _eventSystem.enabled = toggleActive;
+        if (!toggleActive) return;
+        _eventSystem.SetSelectedGameObject(null);
+        _eventSystem.SetSelectedGameObject(_eventSystem.firstSelectedGameObject); // Selecting the first object again
     }
     
     private void Awake() {
@@ -29,10 +32,12 @@ public class EventSystemToggle : MonoBehaviour {
     }
 
     private void OnEnable() {
-        toggleEventSystemChannel.OnEventRaised += ToggleEventSystem;
+        if(toggleEventSystemChannel)
+            toggleEventSystemChannel.OnEventRaised += ToggleEventSystem;
     }
 
     private void OnDisable() {
-        toggleEventSystemChannel.OnEventRaised -= ToggleEventSystem;
+        if(toggleEventSystemChannel)
+            toggleEventSystemChannel.OnEventRaised -= ToggleEventSystem;
     }
 }
