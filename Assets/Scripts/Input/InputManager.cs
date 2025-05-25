@@ -30,7 +30,7 @@ public static class ActionBuffer {
 public class InputManager : MonoBehaviour {
     [Header("Controller references")]
     [SerializeField]
-    private PlyController playerControllerReference;
+    private PlayerCharacterController playerControllerReference;
     [SerializeField]
     private CameraController cameraControllerReference;
     [Header("Player Actions")]
@@ -58,7 +58,7 @@ public class InputManager : MonoBehaviour {
     private bool _mouseLocked = false;
 
     private void OnPlayerSpawned() {
-        if (!ServiceLocator.TryGetService<PlyController>(out var playerController)) return;
+        if (!ServiceLocator.TryGetService<PlayerCharacterController>(out var playerController)) return;
         playerControllerReference = playerController;
     }
 
@@ -85,13 +85,20 @@ public class InputManager : MonoBehaviour {
     }
     
     private void HandleToggleMouseLockInput(InputAction.CallbackContext ctx) {
+#if UNITY_EDITOR
         SetMouseLocked(!_mouseLocked);
+#endif
     }
     
     private void HandleJumpInput(InputAction.CallbackContext ctx) {
         if (!playerControllerReference) return;
-        ActionBuffer.Add(ctx.action.name);
-        playerControllerReference.OnJump();
+        if (ctx.started) {
+            ActionBuffer.Add(ctx.action.name); // [!] We buffer exclusively the start inputs
+            playerControllerReference.OnJump();
+        }
+        else {
+            playerControllerReference.OnCancelJump();
+        }
     }
 
     private void HandleLookInput(InputAction.CallbackContext ctx) {
@@ -155,7 +162,7 @@ public class InputManager : MonoBehaviour {
         }
         if (jumpAction) {
             jumpAction.action.started += HandleJumpInput;
-            //jumpAction.action.canceled += HandleJumpInput;
+            jumpAction.action.canceled += HandleJumpInput;
         }
         if (togglePauseMenuAction) {
             togglePauseMenuAction.action.started += HandleTogglePauseMenuInput;

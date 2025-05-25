@@ -156,7 +156,9 @@ MonoBehaviour:
   speed: 25
   force: 30
   airControlFactor: 0.8
-  jumpForce: 8
+  jumpForce: 5
+  holdJumpForce: 10
+  holdJumpTime: 0.5
   earlyJumpWindow: 0.2
 --- !u!114 &3691461192095662392
 MonoBehaviour:
@@ -243,7 +245,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 1
-  groundCheckDistance: 1.2
+  groundCheckDistance: 1.05
   frontFootOffset: 0.15
-  jumpCooldown: 0.15
+  jumpCooldown: 0.2
   coyoteTime: 0.25

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(PlyController))]
+[RequireComponent(typeof(PlayerCharacterController))]
 public class PlayerCharacter : Character {
     [Header("Anchoring Config")]
     [SerializeField]
@@ -29,6 +29,8 @@ public class PlayerCharacter : Character {
     }
 
     private void HandleJumping() {
+        if (ContinuousForceRequest == null) return;
+        Rb.AddForce(Vector3.up * VerticalForceRequest, ForceMode.Force);
         if (InstantForceRequest == null) return;
         var cameraDirection = CalculateCameraAnchoring();
         // Resetting vertical velocity before jumping so that the jump always has the same impulse.

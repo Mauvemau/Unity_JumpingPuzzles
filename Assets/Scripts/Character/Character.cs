@@ -3,11 +3,10 @@ using UnityEngine;
 /// <summary>
 /// Represents a force that can be applied to a rigidBody
 /// </summary>
-public class ForceRequest
-{
-    public Vector3 Direction;
-    public float Acceleration;
-    public float Speed;
+public class ForceRequest {
+    public Vector3 Direction = Vector3.zero;
+    public float Acceleration = 0.0f;
+    public float Speed = 0.0f;
 }
 
 /// <summary>
@@ -29,6 +28,7 @@ public class Character : MonoBehaviour {
     
     protected ForceRequest InstantForceRequest;
     protected ForceRequest ContinuousForceRequest;
+    protected float VerticalForceRequest = 0f;
 
     public void RequestInstantForce(ForceRequest forceRequest) {
         InstantForceRequest = forceRequest;
@@ -38,6 +38,14 @@ public class Character : MonoBehaviour {
         ContinuousForceRequest = forceRequest;
     }
 
+    public void RequestStartVerticalImpulse(float verticalForce) {
+        VerticalForceRequest = verticalForce;
+    }
+
+    public void RequestStopVerticalImpulse() {
+        VerticalForceRequest = 0;
+    }
+    
     public void RequestSetPosition(Vector3 position) {
         transform.position = position;
     }
@@ -50,10 +58,7 @@ public class Character : MonoBehaviour {
             Rb.linearVelocity = Vector3.zero;
             return;
         }
-
-        var projectedSpeed = Vector3.Dot(Rb.linearVelocity, currentDirection);
-        var correctedVelocity = currentDirection * projectedSpeed;
-        Rb.linearVelocity = new Vector3(correctedVelocity.x, 0, correctedVelocity.z);
+        Rb.linearVelocity = new Vector3(Rb.linearVelocity.x, 0, Rb.linearVelocity.z);
     }
     
     /// <summary>
@@ -103,6 +108,8 @@ public class Character : MonoBehaviour {
     }
 
     private void HandleJumping() {
+        if (ContinuousForceRequest == null) return;
+        Rb.AddForce(Vector3.up * VerticalForceRequest, ForceMode.Force);
         if (InstantForceRequest == null) return;
         var currentDirection = ContinuousForceRequest.Direction;
         // Resetting vertical velocity before jumping so that the jump always has the same impulse.

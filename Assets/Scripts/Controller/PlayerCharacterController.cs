@@ -4,7 +4,7 @@ using UnityEngine;
 /// Decides actions taken by the player based on input received.
 /// </summary>
 [RequireComponent(typeof(Character))]
-public class PlyController : MonoBehaviour {
+public class PlayerCharacterController : MonoBehaviour {
     private Character _character;
     [Header("Movement")]
     [SerializeField]
@@ -20,7 +20,15 @@ public class PlyController : MonoBehaviour {
     [Header("Jump")]
     [Min(0)]
     [SerializeField]
-    private float jumpForce = 8f;
+    private float jumpForce = 5f;
+    [Min(0)]
+    [SerializeField]
+    [Tooltip("Vertical continuous force applied to the character when holding jump")]
+    private float holdJumpForce = 10f;
+    [Min(0)]
+    [SerializeField]
+    [Tooltip("Amount of time the player is allowed to holdJump")]
+    private float holdJumpTime = .35f;
     [SerializeField]
     [Min(0)]
     [Tooltip("Defines the time window in which a jump input will be accepted if it's pressed before the character has landed")]
@@ -47,12 +55,22 @@ public class PlyController : MonoBehaviour {
         request.Speed = speed;
         _character.feet.SetJumping();
         _character.RequestInstantForce(request);
+        _character.RequestStartVerticalImpulse(holdJumpForce);
+    }
+
+    public void OnCancelJump() {
+        _character.RequestStopVerticalImpulse();
     }
 
     private void FixedUpdate() {
         if (!_character) return;
         if (_character.feet.IsGrounded() && ActionBuffer.HasActionBeenExecuted("Jump", earlyJumpWindow)) {
             OnJump();
+            OnCancelJump(); // Cancel hold jump immediately
+        }
+
+        if (_character.feet.IsGrounded() || _character.feet.GetLastJumpTimestamp() + holdJumpTime < Time.time) {
+            _character.RequestStopVerticalImpulse();
         }
     }
     

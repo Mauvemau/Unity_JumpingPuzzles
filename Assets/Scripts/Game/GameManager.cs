@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour {
         
         _playerInstance.SetActive(true);
         var characterPlayerComponent = _playerInstance.GetComponent<PlayerCharacter>();
-        var controllerPlayerComponent = _playerInstance.GetComponent<PlyController>();
+        var controllerPlayerComponent = _playerInstance.GetComponent<PlayerCharacterController>();
         ServiceLocator.SetService(characterPlayerComponent);
         ServiceLocator.SetService(controllerPlayerComponent);
         OnPlayerSpawned?.Invoke();

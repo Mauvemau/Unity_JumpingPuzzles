@@ -17,7 +17,7 @@ public class CharacterFoot : MonoBehaviour {
     [SerializeField]
     [Min(0)]
     [Tooltip("Defines how long until the character is allowed to jump again after jumping")]
-    private float jumpCooldown = .1f;
+    private float jumpCooldown = .2f;
     private float _jumpTimestamp;
     private bool _jumping = false;
 
@@ -58,6 +58,10 @@ public class CharacterFoot : MonoBehaviour {
         return Physics.Raycast(rayOrigin, Vector3.down, out var hit, groundCheckDistance, groundLayer) ? 
             hit.normal : // Normal of the surface the front foot is touching
             GetGroundNormal(); // If front foot fails, try center foot
+    }
+
+    public float GetLastJumpTimestamp() {
+        return _jumpTimestamp;
     }
     
     /// <summary>
