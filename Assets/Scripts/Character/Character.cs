@@ -65,7 +65,7 @@ public class Character : MonoBehaviour {
             clampedVelocity.x = Mathf.Clamp(clampedVelocity.x, -maxRbSpeed, maxRbSpeed);
             clampedVelocity.z = Mathf.Clamp(clampedVelocity.z, -maxRbSpeed, maxRbSpeed);
 
-            Rb.linearVelocity = clampedVelocity;
+            Rb.linearVelocity = clampedVelocity; // For your safety!
         }
     }
 
