@@ -12,8 +12,6 @@ public class CheckpointPlatform : MonoBehaviour {
     [SerializeField] 
     private LayerMask playerLayer;
     
-    private Collider _colliderReference;
-    
     private void HandlePlayerCollision(PlayerCharacter player) {
         if (!player) return;
         if (!ServiceLocator.TryGetService<GameManager>(out var gameManager)) return;
@@ -30,10 +28,6 @@ public class CheckpointPlatform : MonoBehaviour {
         if (((1 << other.layer) & playerLayer) == 0) return;
         var player = other.GetComponent<PlayerCharacter>();
         HandlePlayerCollision(player);
-    }
-    
-    private void Awake() {
-        _colliderReference = GetComponent<Collider>();
     }
 
     private void OnValidate() {

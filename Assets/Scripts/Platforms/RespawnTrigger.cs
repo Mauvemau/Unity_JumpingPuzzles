@@ -12,8 +12,7 @@ public class RespawnTrigger : MonoBehaviour {
     private GameManager _gameManagerReference;
     private Collider _colliderReference;
 
-    private void HandlePlayerTrigger(PlayerCharacter player) {
-        if (!player) return;
+    private void HandlePlayerTrigger() {
         if (!ServiceLocator.TryGetService<GameManager>(out var gameManager)) return;
         gameManager.RespawnPlayer();
     }
@@ -21,8 +20,7 @@ public class RespawnTrigger : MonoBehaviour {
     private void OnTriggerEnter(Collider collision) {
         var other = collision.gameObject;
         if (((1 << other.layer) & playerLayer) == 0) return;
-        var player = other.GetComponent<PlayerCharacter>();
-        HandlePlayerTrigger(player);
+        HandlePlayerTrigger();
     }
 
     private void Awake() {
