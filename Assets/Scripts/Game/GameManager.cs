@@ -25,11 +25,20 @@ public class GameManager : MonoBehaviour {
     private BoolEventChannel togglePauseMenuChannel;
     
     // Event Actions
-    public static event Action OnPlayerSpawned;
+    public static event Action OnPlayerSpawned = delegate {};
+    public static event Action<bool> OnGamePaused = delegate {};
     
     private GameObject _playerInstance;
     private Vector3 _currentPlayerSpawnPosition;
     private bool _gameInitialized = false;
+    private bool _gamePaused = false;
+
+    /// <summary>
+    /// Returns if the game is initialized and not paused
+    /// </summary>
+    public bool GetIsGameReady() {
+        return (_gameInitialized && !_gamePaused);
+    }
     
     public void RespawnPlayer() {
         var player = _playerInstance.GetComponent<PlayerCharacter>();
@@ -41,6 +50,12 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     public void SetPlayerRespawnPosition(Vector3 position) {
         _currentPlayerSpawnPosition = position;
+    }
+
+    private void HandleGamePausing(bool paused) {
+        _gamePaused = paused;
+        _playerInstance.SetActive(!paused);
+        OnGamePaused?.Invoke(paused);
     }
     
     /// <summary>
@@ -114,6 +129,7 @@ public class GameManager : MonoBehaviour {
         initGameChannel.OnEventRaised += InitGame;
         endGameChannel.OnEventRaised += EndGame;
         exitApplicationChannel.OnEventRaised += ExitApplication;
+        togglePauseMenuChannel.OnEventRaised += HandleGamePausing;
         //
         UIManager.OnPauseMenuToggleRequest += TogglePauseMenuVisibility;
     }
@@ -123,7 +139,8 @@ public class GameManager : MonoBehaviour {
         initGameChannel.OnEventRaised -= InitGame;
         endGameChannel.OnEventRaised -= EndGame;
         exitApplicationChannel.OnEventRaised -= ExitApplication;
+        togglePauseMenuChannel.OnEventRaised -= HandleGamePausing;
         //
-        UIManager.OnPauseMenuToggleRequest += TogglePauseMenuVisibility;
+        UIManager.OnPauseMenuToggleRequest -= TogglePauseMenuVisibility;
     }
 }

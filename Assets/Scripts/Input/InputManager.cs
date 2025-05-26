@@ -61,6 +61,13 @@ public class InputManager : MonoBehaviour {
     
     private bool _mouseLocked = false;
 
+    /// <summary>
+    /// Verifies we're in a situation where it's appropriate to read player input
+    /// </summary>
+    private bool ShouldReadGameplayRelatedInput() {
+        return (gameManagerReference && gameManagerReference.GetIsGameReady());
+    }
+    
     private void OnPlayerSpawned() {
         if (!ServiceLocator.TryGetService<PlayerCharacterController>(out var playerController)) return;
         playerControllerReference = playerController;
@@ -99,6 +106,7 @@ public class InputManager : MonoBehaviour {
     
     private void HandleJumpInput(InputAction.CallbackContext ctx) {
         if (!playerControllerReference) return;
+        if (!ShouldReadGameplayRelatedInput()) return;
         if (ctx.started) {
             ActionBuffer.Add(ctx.action.name); // [!] We buffer exclusively the start inputs
             playerControllerReference.OnJump();
@@ -110,11 +118,13 @@ public class InputManager : MonoBehaviour {
 
     private void HandleRespawnInput(InputAction.CallbackContext ctx) {
         if (!gameManagerReference) return;
+        if (!ShouldReadGameplayRelatedInput()) return;
         gameManagerReference.RespawnPlayer();
     }
     
     private void HandleLookInput(InputAction.CallbackContext ctx) {
         if (!cameraControllerReference) return;
+        if (!ShouldReadGameplayRelatedInput()) return;
         // We don't add camera input to the action buffer
         var isMouseInput = ctx.control.device.name.Contains("Mouse");
         if (isMouseInput && !_mouseLocked) {
@@ -128,6 +138,7 @@ public class InputManager : MonoBehaviour {
     
     private void HandleMoveInput(InputAction.CallbackContext ctx) {
         if (!playerControllerReference) return;
+        if (!ShouldReadGameplayRelatedInput()) return;
         // We don't add movement to the action buffer
         playerControllerReference.OnMove(ctx.ReadValue<Vector2>());
     }

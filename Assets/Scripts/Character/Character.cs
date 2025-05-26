@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -90,7 +91,7 @@ public class Character : MonoBehaviour {
     protected static Vector3 ProjectSlope(Vector3 currentDirection, Vector3 groundNormal) {
         return Vector3.ProjectOnPlane(currentDirection, groundNormal).normalized;
     }
-
+    
     private void HandleMovement() {
         if (ContinuousForceRequest == null) return;
         var currentDirection = ContinuousForceRequest.Direction;

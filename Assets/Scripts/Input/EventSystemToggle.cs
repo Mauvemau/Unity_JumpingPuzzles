@@ -19,6 +19,12 @@ public class EventSystemToggle : MonoBehaviour {
     
     private void ToggleEventSystem(bool toggleActive) {
         _eventSystem.enabled = toggleActive;
+        
+        var inputModule = _eventSystem.GetComponent<BaseInputModule>();
+        if (inputModule) {
+            inputModule.enabled = toggleActive;
+        }
+        
         if (!toggleActive) return;
         _eventSystem.SetSelectedGameObject(null);
         _eventSystem.SetSelectedGameObject(_eventSystem.firstSelectedGameObject); // Selecting the first object again
