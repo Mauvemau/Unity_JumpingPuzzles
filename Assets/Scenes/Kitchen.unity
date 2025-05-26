@@ -2440,7 +2440,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &511875635
 Transform:
   m_ObjectHideFlags: 0
@@ -2719,8 +2719,9 @@ GameObject:
   - component: {fileID: 579277256}
   - component: {fileID: 579277255}
   - component: {fileID: 579277254}
+  - component: {fileID: 579277259}
   m_Layer: 0
-  m_Name: CheckPoint (2)
+  m_Name: InitLevel1CheckPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2831,6 +2832,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &579277259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579277253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4efb25b57b3f7166e899d718f0c183e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectsToEnable:
+  - {fileID: 1034989708}
+  objectsToDisable:
+  - {fileID: 704999023}
+  - {fileID: 511875634}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &583793002
 GameObject:
   m_ObjectHideFlags: 0
@@ -3758,7 +3779,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &704999024
 Transform:
   m_ObjectHideFlags: 0
@@ -3987,8 +4008,9 @@ GameObject:
   - component: {fileID: 751575955}
   - component: {fileID: 751575954}
   - component: {fileID: 751575953}
+  - component: {fileID: 751575957}
   m_Layer: 0
-  m_Name: CheckPoint (3)
+  m_Name: InitLevel2CheckPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4099,6 +4121,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 751575951}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &751575957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751575951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4efb25b57b3f7166e899d718f0c183e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectsToEnable:
+  - {fileID: 511875634}
+  objectsToDisable:
+  - {fileID: 704999023}
+  - {fileID: 1034989708}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &763354480
 GameObject:
   m_ObjectHideFlags: 0
@@ -5487,7 +5529,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1034989709
 Transform:
   m_ObjectHideFlags: 0
@@ -8212,9 +8254,10 @@ GameObject:
   - component: {fileID: 1682351359}
   - component: {fileID: 1682351358}
   - component: {fileID: 1682351362}
+  - component: {fileID: 1682351364}
   - component: {fileID: 1682351363}
   m_Layer: 0
-  m_Name: CheckPoint
+  m_Name: IntiTutorialCheckPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8342,6 +8385,26 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   textPromptPanelEventChannel: {fileID: 11400000, guid: 838c1a4563fad9ffc8be50acdcaf82bf, type: 2}
+--- !u!114 &1682351364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1682351357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4efb25b57b3f7166e899d718f0c183e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectsToEnable:
+  - {fileID: 704999023}
+  objectsToDisable:
+  - {fileID: 1034989708}
+  - {fileID: 511875634}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &1690561909
 GameObject:
   m_ObjectHideFlags: 0
