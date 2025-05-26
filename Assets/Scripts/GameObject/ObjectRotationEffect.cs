@@ -1,16 +1,11 @@
+using System;
 using UnityEngine;
 
-public class ObjectRotationEffect : MonoBehaviour
-{
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+public class ObjectRotationEffect : MonoBehaviour {
+    [SerializeField] 
+    private Vector3 rotationSpeed = Vector3.zero;
+    
+    private void Update() {
+        transform.Rotate(rotationSpeed * Time.deltaTime);
     }
 }
