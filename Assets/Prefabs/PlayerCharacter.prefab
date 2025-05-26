@@ -155,7 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 25
   force: 30
-  airControlFactor: 0.5
+  airControlFactor: 1
   jumpForce: 5
   holdJumpForce: 10
   holdJumpTime: 0.5
@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   feet: {fileID: 5952194341883549281}
-  maxSlopeAngle: 70
+  maxSlopeAngle: 80
   slopeEffortCurveMultiplier: 3
   cameraReference: {fileID: 0}
 --- !u!1 &5562682128291620555

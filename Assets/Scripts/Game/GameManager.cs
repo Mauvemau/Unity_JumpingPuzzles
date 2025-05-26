@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour {
 
     [Header("Game Configuration")]
     [SerializeField]
-    private Vector3 defaultPlayerSpawnPosition;
+    private Transform defaultPlayerSpawnPosition;
     
     [Header("Event Listeners")]
     [SerializeField]
@@ -98,9 +98,14 @@ public class GameManager : MonoBehaviour {
 
     private void ResetInstances() {
         _gameInitialized = false;
-        _currentPlayerSpawnPosition = defaultPlayerSpawnPosition;
+        if (!defaultPlayerSpawnPosition) {
+            _currentPlayerSpawnPosition = Vector3.zero;
+        }
+        else {
+            _currentPlayerSpawnPosition = defaultPlayerSpawnPosition.position;
+        }
         var player = _playerInstance.GetComponent<PlayerCharacter>();
-        player.RequestSetPosition(defaultPlayerSpawnPosition);
+        player.RequestSetPosition(defaultPlayerSpawnPosition.position);
         _playerInstance.SetActive(false);
     }
     
@@ -110,7 +115,12 @@ public class GameManager : MonoBehaviour {
     }
     
     private void LoadInstances() {
-        _currentPlayerSpawnPosition = defaultPlayerSpawnPosition;
+        if(!defaultPlayerSpawnPosition) {
+            _currentPlayerSpawnPosition = Vector3.zero;
+        }
+        else {
+            _currentPlayerSpawnPosition = defaultPlayerSpawnPosition.position;
+        }
         _playerInstance = Instantiate(playerPrefab, _currentPlayerSpawnPosition, Quaternion.identity);
         _playerInstance.SetActive(false);
     }
@@ -119,6 +129,9 @@ public class GameManager : MonoBehaviour {
         if (!playerPrefab) {
             Debug.LogError($"{name}: There is no player player prefab assigned!");
             return;
+        }
+        if (!defaultPlayerSpawnPosition) {
+            Debug.LogError($"{name}: There is no default spawn position assigned! Defaulting to 0"); // TODO fix later
         }
         ServiceLocator.SetService(this);
         LoadInstances();
