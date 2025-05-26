@@ -15,6 +15,10 @@ public class ForceRequest {
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class Character : MonoBehaviour {
+    [Header("Rigidbody Config")]
+    [SerializeField]
+    [Tooltip("Defines a maximum speed for the rigidbody")]
+    private float maxRbSpeed = 0f;
     [Header("Foot Config")]
     [Tooltip("Used for logic that requires knowing if the character is grounded")]
     public CharacterFoot feet;
@@ -52,6 +56,19 @@ public class Character : MonoBehaviour {
         transform.position = position;
     }
     
+    /// <summary>
+    /// Clamps the maximum speed of the rigidbody
+    /// </summary>
+    protected void EvilSpeedLimiter() {
+        if(maxRbSpeed > 0) {
+            Vector3 clampedVelocity = Rb.linearVelocity;
+            clampedVelocity.x = Mathf.Clamp(clampedVelocity.x, -maxRbSpeed, maxRbSpeed);
+            clampedVelocity.z = Mathf.Clamp(clampedVelocity.z, -maxRbSpeed, maxRbSpeed);
+
+            Rb.linearVelocity = clampedVelocity;
+        }
+    }
+
     /// <summary>
     /// Cancels momentum on every axis except the direction the player is moving towards
     /// </summary>
@@ -107,6 +124,7 @@ public class Character : MonoBehaviour {
         var speedPercentage = Rb.linearVelocity.magnitude / ContinuousForceRequest.Speed;
         var remainingSpeedPercentage = Mathf.Clamp01(1f - speedPercentage);
         Rb.AddForce(projectedDirection * (ContinuousForceRequest.Acceleration * remainingSpeedPercentage), ForceMode.Force);
+        EvilSpeedLimiter();
     }
 
     private void HandleJumping() {

@@ -55,6 +55,7 @@ public class PlayerCharacter : Character {
         var speedPercentage = Rb.linearVelocity.magnitude / ContinuousForceRequest.Speed;
         var remainingSpeedPercentage = Mathf.Clamp01(1f - speedPercentage);
         Rb.AddForce(projectedDirection * (ContinuousForceRequest.Acceleration * remainingSpeedPercentage), ForceMode.Force);
+        EvilSpeedLimiter();
     }
     
     private void FixedUpdate() {

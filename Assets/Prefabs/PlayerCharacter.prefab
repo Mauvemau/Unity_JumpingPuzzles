@@ -172,6 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f370322881aa9036bca0e78940bf6a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxRbSpeed: 15
   feet: {fileID: 5952194341883549281}
   maxSlopeAngle: 80
   slopeEffortCurveMultiplier: 3
