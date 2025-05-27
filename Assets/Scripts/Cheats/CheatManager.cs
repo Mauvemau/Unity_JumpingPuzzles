@@ -20,7 +20,7 @@ public class CheatManager : MonoBehaviour {
         if (!_gameManagerReference.GetIsGameReady()) return;
         
         _currentWaypoint++;
-        if(_currentWaypoint > quickTeleportWaypoints.Count) _currentWaypoint = 0;
+        if (_currentWaypoint >= quickTeleportWaypoints.Count) _currentWaypoint = 0;
         _playerCharacterReference.RequestSetPosition(quickTeleportWaypoints[_currentWaypoint].position);
     }
     
