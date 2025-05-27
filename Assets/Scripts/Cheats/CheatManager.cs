@@ -15,7 +15,6 @@ public class CheatManager : MonoBehaviour {
 
     [ContextMenu("Instant Skip Level")]
     private void RequestSkipLevel() {
-        Debug.Log("a");
         if (!_gameManagerReference) return;
         if (!_playerCharacterReference) return;
         if (!_gameManagerReference.GetIsGameReady()) return;

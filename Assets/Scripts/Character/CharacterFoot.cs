@@ -12,6 +12,13 @@ public class CharacterFoot : MonoBehaviour {
     [SerializeField] 
     [Tooltip("Defines distance of the front foot towards the pivot")]
     private float frontFootOffset = .2f;
+    [SerializeField] 
+    [Tooltip("Amount of extra raycasts casted for a more accurate ground reading")]
+    private int amountExtraRaycast = 10;
+    [SerializeField] 
+    [Tooltip("Distance around the player where extra raycasts will be cast")]
+    private float extraRaycastRadius = .5f;
+    
     
     [Header("Jump Settings")] 
     [SerializeField]
@@ -29,10 +36,35 @@ public class CharacterFoot : MonoBehaviour {
     private float _lastGroundedTime;
 
     /// <summary>
-    /// Returns whether the foot are touching the ground. Only cares about the ground layer and distance. Disregards all other foot logic
+    /// Casts rays in a circular pattern around the player to check for ground contact.
     /// </summary>
-    private bool IsTouchingGround() {
-        return Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
+    private bool CheckSurroundingArea()
+    {
+        var angleStep = 360f / amountExtraRaycast;
+
+        for (var i = 0; i < amountExtraRaycast; i++)
+        {
+            var angleRad = angleStep * i * Mathf.Deg2Rad;
+            var offset = new Vector3(Mathf.Cos(angleRad), 0f, Mathf.Sin(angleRad)) * extraRaycastRadius;
+            var origin = transform.position + offset;
+
+            if (Physics.Raycast(origin, Vector3.down, groundCheckDistance, groundLayer))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Returns whether the feet are touching the ground.
+    /// Only considers the ground layer and ground check distance.
+    /// </summary>
+    private bool IsTouchingGround()
+    {
+        return Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer)
+               || CheckSurroundingArea();
     }
 
     /// <summary>

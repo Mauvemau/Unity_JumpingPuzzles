@@ -120,7 +120,6 @@ public class InputManager : MonoBehaviour {
 
     private void HandleCheatLevelInput(InputAction.CallbackContext ctx) {
         if (!ShouldReadGameplayRelatedInput()) return;
-        Debug.Log("i");
         OnCheatLevelInputPerformed?.Invoke();
     }
     
