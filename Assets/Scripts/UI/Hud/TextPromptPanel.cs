@@ -37,6 +37,9 @@ public class TextPromptPanel : MonoBehaviour {
     }
     
     private void Awake() {
+        if (!textPromptPanelEventChannel) {
+            Debug.LogWarning($"{name} event listener not configured!");
+        }
         _textDisplay = GetComponentInChildren<TextMeshProUGUI>();
         if (!_textDisplay) {
             Debug.LogError($"{name}: TextMeshProUGUI component not found in children!");

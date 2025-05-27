@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerCharacterController))]
@@ -59,7 +58,6 @@ public class PlayerCharacter : Character {
     }
     
     private void FixedUpdate() {
-        if (Rb.isKinematic) return; // Means the game is paused
         HandleMovement();
         HandleJumping();
     }

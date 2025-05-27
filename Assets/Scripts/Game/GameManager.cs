@@ -93,6 +93,9 @@ public class GameManager : MonoBehaviour {
         var controllerPlayerComponent = _playerInstance.GetComponent<PlayerCharacterController>();
         ServiceLocator.SetService(characterPlayerComponent);
         ServiceLocator.SetService(controllerPlayerComponent);
+        if (ServiceLocator.TryGetService<CollectibleManager>(out var collectibleManager)) {
+            collectibleManager.Clear();
+        }
         OnPlayerSpawned?.Invoke();
     }
 

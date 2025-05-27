@@ -34,6 +34,15 @@ public class PlayerCharacterController : MonoBehaviour {
     [Tooltip("Defines the time window in which a jump input will be accepted if it's pressed before the character has landed")]
     private float earlyJumpWindow = .2f;
 
+    [Header("Debug")]
+    [SerializeField]
+    [Tooltip("Allows the player to fly... sort of")]
+    private bool infiniteJump = false;
+
+    public void ToggleInfiniteJump() {
+        infiniteJump = !infiniteJump;
+    }
+    
     public void OnMove(Vector2 horizontalInput) {
         if (!_character) return;
         var request = new ForceRequest();
@@ -48,7 +57,7 @@ public class PlayerCharacterController : MonoBehaviour {
 
     public void OnJump() {
         if (!_character) return;
-        if (!_character.feet.IsGrounded()) return;
+        if (!_character.feet.IsGrounded() && !infiniteJump) return;
         var request = new ForceRequest();
         request.Direction = Vector3.up;
         request.Acceleration = jumpForce;
@@ -69,7 +78,7 @@ public class PlayerCharacterController : MonoBehaviour {
             OnCancelJump(); // Cancel hold jump immediately
         }
 
-        if (_character.feet.IsGrounded() || _character.feet.GetLastJumpTimestamp() + holdJumpTime < Time.time) {
+        if (!infiniteJump && (_character.feet.IsGrounded() || _character.feet.GetLastJumpTimestamp() + holdJumpTime < Time.time)) {
             _character.RequestStopVerticalImpulse();
         }
     }
