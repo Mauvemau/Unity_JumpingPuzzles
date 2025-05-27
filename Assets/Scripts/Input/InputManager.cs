@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -28,13 +29,14 @@ public static class ActionBuffer {
 /// Handles input for entities controlled by the player
 /// </summary>
 public class InputManager : MonoBehaviour {
-    [Header("Controller references")]
+    [Header("References")]
     [SerializeField]
     private PlayerCharacterController playerControllerReference;
     [SerializeField]
     private CameraController cameraControllerReference;
     [SerializeField]
     private GameManager gameManagerReference;
+    
     [Header("Player Actions")]
     [SerializeField]
     private InputActionReference moveAction;
@@ -44,6 +46,14 @@ public class InputManager : MonoBehaviour {
     private InputActionReference jumpAction;
     [SerializeField]
     private InputActionReference respawnAction;
+
+    [Header("Debug Actions")] 
+    [SerializeField]
+    private InputActionReference cheatLevelAction;
+    [SerializeField] 
+    private InputActionReference cheatJumpAction;
+    [SerializeField] 
+    private InputActionReference cheatSpeedAction;
 
     [Header("UI Actions")] 
     [SerializeField]
@@ -58,6 +68,10 @@ public class InputManager : MonoBehaviour {
     [Header("EventInvokers")] 
     [SerializeField]
     private BoolEventChannel uIToggleInputChannel;
+    
+    public static event Action OnCheatLevelInputPerformed = delegate {}; // Cleaner to just do this with every input?
+    public static event Action OnCheatJumpInputPerformed = delegate {};
+    public static event Action OnCheatSpeedInputPerformed = delegate {};
     
     private bool _mouseLocked = false;
 
@@ -102,6 +116,22 @@ public class InputManager : MonoBehaviour {
 #if UNITY_EDITOR
         SetMouseLocked(!_mouseLocked);
 #endif
+    }
+
+    private void HandleCheatLevelInput(InputAction.CallbackContext ctx) {
+        if (!ShouldReadGameplayRelatedInput()) return;
+        Debug.Log("i");
+        OnCheatLevelInputPerformed?.Invoke();
+    }
+    
+    private void HandleCheatJumpInput(InputAction.CallbackContext ctx) {
+        if (!ShouldReadGameplayRelatedInput()) return;
+        OnCheatJumpInputPerformed?.Invoke();
+    }
+    
+    private void HandleCheatSpeedInput(InputAction.CallbackContext ctx) {
+        if (!ShouldReadGameplayRelatedInput()) return;
+        OnCheatSpeedInputPerformed?.Invoke();
     }
     
     private void HandleJumpInput(InputAction.CallbackContext ctx) {
@@ -162,6 +192,17 @@ public class InputManager : MonoBehaviour {
         if (!respawnAction) {
             Debug.LogWarning($"{name}: {nameof(respawnAction)} is null!");
         }
+        
+        if (!cheatLevelAction) {
+            Debug.LogWarning($"{name}: {nameof(cheatLevelAction)} is null!");
+        }
+        if (!cheatJumpAction) {
+            Debug.LogWarning($"{name}: {nameof(cheatJumpAction)} is null!");
+        }
+        if (!cheatSpeedAction) {
+            Debug.LogWarning($"{name}: {nameof(cheatSpeedAction)} is null!");
+        }
+        
         if (!togglePauseMenuAction) {
             Debug.LogWarning($"{name}: {nameof(togglePauseMenuAction)} is null!");
         }
@@ -196,6 +237,18 @@ public class InputManager : MonoBehaviour {
         if (respawnAction) {
             respawnAction.action.started += HandleRespawnInput;
         }
+        
+        if (cheatLevelAction) {
+            cheatLevelAction.action.started += HandleCheatLevelInput;
+        }
+        if (cheatJumpAction) {
+            cheatJumpAction.action.started += HandleCheatJumpInput;
+        }
+        if (cheatSpeedAction) {
+            cheatSpeedAction.action.started += HandleCheatSpeedInput;
+        }
+        
+        
         if (togglePauseMenuAction) {
             togglePauseMenuAction.action.started += HandleTogglePauseMenuInput;
         }
@@ -231,6 +284,17 @@ public class InputManager : MonoBehaviour {
         if (respawnAction) {
             respawnAction.action.started -= HandleRespawnInput;
         }
+        
+        if (cheatLevelAction) {
+            cheatLevelAction.action.started -= HandleCheatLevelInput;
+        }
+        if (cheatJumpAction) {
+            cheatJumpAction.action.started -= HandleCheatJumpInput;
+        }
+        if (cheatSpeedAction) {
+            cheatSpeedAction.action.started -= HandleCheatSpeedInput;
+        }
+        
         if (togglePauseMenuAction) {
             togglePauseMenuAction.action.started -= HandleTogglePauseMenuInput;
         }

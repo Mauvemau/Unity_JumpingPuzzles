@@ -32,7 +32,7 @@ public class CollectibleManager : MonoBehaviour {
     private void HandleVictory() {
         if (_victory) return;
         _victory = true;
-        const string victoryText = "You win!\nYou have collected all the main collectives!";
+        const string victoryText = "You win!\nYou have collected all the main collectibles!";
         victoryAnnouncementPromptChannel.RaiseEvent(victoryText);
     }
     

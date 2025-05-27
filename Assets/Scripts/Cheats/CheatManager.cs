@@ -14,7 +14,8 @@ public class CheatManager : MonoBehaviour {
     private bool _superSpeed = false;
 
     [ContextMenu("Instant Skip Level")]
-    private void OnSkipLevelRequested() {
+    private void RequestSkipLevel() {
+        Debug.Log("a");
         if (!_gameManagerReference) return;
         if (!_playerCharacterReference) return;
         if (!_gameManagerReference.GetIsGameReady()) return;
@@ -24,20 +25,20 @@ public class CheatManager : MonoBehaviour {
         _playerCharacterReference.RequestSetPosition(quickTeleportWaypoints[_currentWaypoint].position);
     }
     
+    [ContextMenu("Infinite Jump Toggle")]
+    private void RequestInfiniteJump() {
+        if (!_playerControllerReference) return;
+        if (!_gameManagerReference.GetIsGameReady()) return;
+        _playerControllerReference.ToggleInfiniteJump();
+    }
+    
     [ContextMenu("Toggle Super Speed")]
-    private void OnSuperSpeedToggled() {
+    private void RequestSuperSpeed() {
         if (!_gameManagerReference) return;
         if (!_gameManagerReference.GetIsGameReady()) return;
         _superSpeed = !_superSpeed;
 
         Time.timeScale = _superSpeed ? 2f : 1f;
-    }
-    
-    [ContextMenu("Infinite Jump Toggle")]
-    private void OnInfiniteJumpToggled() {
-        if (!_playerControllerReference) return;
-        if (!_gameManagerReference.GetIsGameReady()) return;
-        _playerControllerReference.ToggleInfiniteJump();
     }
     
     private void OnGameStarted() {
@@ -57,12 +58,18 @@ public class CheatManager : MonoBehaviour {
         _playerControllerReference = playerController;
         _gameManagerReference = gameManager;
     }
-    
+
     private void OnEnable() {
         GameManager.OnPlayerSpawned += OnGameStarted;
+        InputManager.OnCheatLevelInputPerformed += RequestSkipLevel;
+        InputManager.OnCheatJumpInputPerformed += RequestInfiniteJump;
+        InputManager.OnCheatSpeedInputPerformed += RequestSuperSpeed;
     }
 
     private void OnDisable() {
         GameManager.OnPlayerSpawned -= OnGameStarted;
+        InputManager.OnCheatLevelInputPerformed -= RequestSkipLevel;
+        InputManager.OnCheatJumpInputPerformed -= RequestInfiniteJump;
+        InputManager.OnCheatSpeedInputPerformed -= RequestSuperSpeed;
     }
 }
