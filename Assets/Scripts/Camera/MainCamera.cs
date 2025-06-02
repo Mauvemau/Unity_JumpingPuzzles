@@ -49,7 +49,7 @@ public class MainCamera : MonoBehaviour {
     }
     
     public void RequestRotation(Vector2 rotationDirection) {
-        _requestedRotationVelocity = rotationDirection;
+        _requestedRotationVelocity += rotationDirection;
     }
 
     private void OnPlayerSpawned() {
@@ -70,13 +70,16 @@ public class MainCamera : MonoBehaviour {
     }
 
     private Vector3 HandleCameraMovement() {
-        _smoothedRotation = Vector2.Lerp(_smoothedRotation, _requestedRotationVelocity, rotationSmoothness);
+        //_smoothedRotation = Vector2.Lerp(_smoothedRotation, _requestedRotationVelocity, rotationSmoothness); // Get rid of this
 
-        _yaw += _smoothedRotation.x * horizontalSpeed * Time.deltaTime;
-        _pitch -= _smoothedRotation.y * verticalSpeed * Time.deltaTime;
+        _yaw += _requestedRotationVelocity.x * horizontalSpeed * Time.deltaTime;
+        _pitch -= _requestedRotationVelocity.y * verticalSpeed * Time.deltaTime;
         _pitch = Mathf.Clamp(_pitch, minClampAngle, maxClampAngle);
 
-        var desiredRotation = Quaternion.Euler(_pitch, _yaw, 0);
+        Vector3 rotationVector = new(_pitch, _yaw, 0);
+        Debug.DrawRay(transform.position, rotationVector, Color.blue);
+        var desiredRotation = Quaternion.Euler(rotationVector);
+        _requestedRotationVelocity = Vector2.zero;                      // Reset
         return target.position + desiredRotation * offset;
     }
 
@@ -97,6 +100,7 @@ public class MainCamera : MonoBehaviour {
         var finalPosition = HandleCameraCollision(desiredPosition);
 
         transform.position = finalPosition;
+        //transform.RotateAround(target.position, target.up, _yaw);
         transform.LookAt(target);
     }
 
