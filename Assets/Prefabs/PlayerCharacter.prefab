@@ -160,6 +160,7 @@ MonoBehaviour:
   holdJumpForce: 10
   holdJumpTime: 0.5
   earlyJumpWindow: 0.2
+  infiniteJump: 0
 --- !u!114 &3691461192095662392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,5 +249,7 @@ MonoBehaviour:
     m_Bits: 1
   groundCheckDistance: 1.05
   frontFootOffset: 0.15
+  amountExtraRaycast: 10
+  extraRaycastRadius: 0.5
   jumpCooldown: 0.2
   coyoteTime: 0.25
