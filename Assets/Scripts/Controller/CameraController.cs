@@ -8,15 +8,19 @@ public class CameraController : MonoBehaviour {
     private MainCamera _camera;
     [SerializeField]
     [Min(0)]
-    private float mouseSensitivity = 1.0f;
+    private float mouseSensitivity = .5f;
     [SerializeField]
     [Min(0)]
-    private float analogStickSensitivity = 80.0f;
+    private float analogStickSensitivity = 100.0f;
     
     public void OnLook(Vector2 directionInput, bool isMouseInput) {
         if (!_camera) return;
-        var sensitivityMultiplier = isMouseInput ? mouseSensitivity : analogStickSensitivity;
-        _camera.RequestRotation(directionInput * sensitivityMultiplier);
+        if (isMouseInput) {
+            _camera.RequestMouseRotation(directionInput * mouseSensitivity);
+        }
+        else {
+            _camera.RequestAnalogRotation(directionInput * analogStickSensitivity);
+        }
     }
 
     private void Awake() {

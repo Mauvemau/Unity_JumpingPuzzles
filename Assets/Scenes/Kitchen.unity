@@ -2379,8 +2379,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9789e0f48d2ee4e91a6a48fa7d0614b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 10
-  analogStickSensitivity: 120
+  mouseSensitivity: 0.15
+  analogStickSensitivity: 150
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2394,15 +2394,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  offset: {x: 0, y: 2, z: -6}
-  horizontalSpeed: 1.2
+  horizontalSpeed: 1
   verticalSpeed: 0.8
-  rotationSmoothness: 0.8
-  minClampAngle: -70
-  maxClampAngle: 70
+  minClampAngle: -80
+  maxClampAngle: 80
   collisionLayer:
     serializedVersion: 2
     m_Bits: 1
+  collisionRadius: 0.3
   minDistance: 1
   maxDistance: 7
 --- !u!1 &396396822
