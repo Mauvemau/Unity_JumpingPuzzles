@@ -27,7 +27,7 @@ public class PlayerCharacter : Character {
         return (camRight * ContinuousForceRequest.Direction.x) +
                (camForward * ContinuousForceRequest.Direction.z);
     }
-
+    
     private void HandleJumping() {
         if (ContinuousForceRequest == null) return;
         Rb.AddForce(Vector3.up * VerticalForceRequest, ForceMode.Force);
@@ -60,6 +60,7 @@ public class PlayerCharacter : Character {
     private void FixedUpdate() {
         HandleMovement();
         HandleJumping();
+        HandleFeedback();
     }
     
 }

@@ -178,6 +178,7 @@ MonoBehaviour:
   feet: {fileID: 5952194341883549281}
   maxSlopeAngle: 80
   slopeEffortCurveMultiplier: 3
+  animationController: {fileID: 2081419424533239168}
   cameraReference: {fileID: 0}
 --- !u!1 &5562682128291620555
 GameObject:
@@ -254,6 +255,7 @@ MonoBehaviour:
   extraRaycastRadius: 0.5
   jumpCooldown: 0.2
   coyoteTime: 0.25
+  animationController: {fileID: 2081419424533239168}
 --- !u!1001 &1803384234975013901
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -313,8 +315,31 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0e61998a0600745419ee3ff32c3ca76c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2081419424533239168}
   m_SourcePrefab: {fileID: 100100000, guid: 0e61998a0600745419ee3ff32c3ca76c, type: 3}
+--- !u!1 &1569365630140059996 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0e61998a0600745419ee3ff32c3ca76c, type: 3}
+  m_PrefabInstance: {fileID: 1803384234975013901}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2081419424533239168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1569365630140059996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d00a96735996b384ba5acd1ca037df40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSmoothness: 10
+  rotationStrength: 0.1
+  _isJumping: 0
 --- !u!4 &2201223469881150438 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0e61998a0600745419ee3ff32c3ca76c, type: 3}
