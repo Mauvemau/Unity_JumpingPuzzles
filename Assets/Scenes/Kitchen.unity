@@ -2026,10 +2026,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9da7b72cefd5dbceb62981db8ac4c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnOffset: {x: 0, y: 0, z: 0}
-  playerLayer:
+  collisionFilter:
     serializedVersion: 2
     m_Bits: 64
+  respawnOffset: {x: 0, y: 0, z: 0}
 --- !u!65 &319524810
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3347,10 +3347,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9da7b72cefd5dbceb62981db8ac4c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnOffset: {x: 0, y: 0, z: 0}
-  playerLayer:
+  collisionFilter:
     serializedVersion: 2
     m_Bits: 64
+  respawnOffset: {x: 0, y: 0, z: 0}
 --- !u!65 &579277255
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4660,10 +4660,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9da7b72cefd5dbceb62981db8ac4c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnOffset: {x: 0, y: 0, z: 0}
-  playerLayer:
+  collisionFilter:
     serializedVersion: 2
     m_Bits: 64
+  respawnOffset: {x: 0, y: 0, z: 0}
 --- !u!65 &751575954
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7290,7 +7290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d9aad7aabad5f64c861caa4f77bdb3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerLayer:
+  collisionFilter:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1243678168
@@ -7308,7 +7308,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -9272,10 +9272,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9da7b72cefd5dbceb62981db8ac4c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnOffset: {x: 0, y: 0, z: 0}
-  playerLayer:
+  collisionFilter:
     serializedVersion: 2
     m_Bits: 64
+  respawnOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &1682351363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9451,7 +9451,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d9aad7aabad5f64c861caa4f77bdb3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerLayer:
+  collisionFilter:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1697218707
@@ -9469,7 +9469,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -11333,10 +11333,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9da7b72cefd5dbceb62981db8ac4c74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnOffset: {x: 0, y: 0, z: 0}
-  playerLayer:
+  collisionFilter:
     serializedVersion: 2
     m_Bits: 64
+  respawnOffset: {x: 0, y: 0, z: 0}
 --- !u!65 &2036287715
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11811,7 +11811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d9aad7aabad5f64c861caa4f77bdb3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerLayer:
+  collisionFilter:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &2101908656
@@ -11829,7 +11829,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

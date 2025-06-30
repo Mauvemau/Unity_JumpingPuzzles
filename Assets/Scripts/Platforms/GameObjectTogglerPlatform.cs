@@ -1,18 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameObjectTogglerPlatform : MonoBehaviour {
+/// <summary>
+/// A platform that enables or/and disables objects on collision
+/// </summary>
+public class GameObjectTogglerPlatform : CollisionInteractable {
     [Header("References")]
     [SerializeField] 
     private List<GameObject> objectsToEnable;
     [SerializeField]
     private List<GameObject> objectsToDisable;
-    
-    [Header("Config")]
-    [SerializeField] 
-    private LayerMask playerLayer;
-    
-    private void HandlePlayerCollision() {
+
+    protected override void HandleCollision(GameObject other) {
         if (objectsToDisable.Count > 0) {
             foreach (var obj in objectsToDisable) {
                 obj.SetActive(false);
@@ -24,18 +23,6 @@ public class GameObjectTogglerPlatform : MonoBehaviour {
             obj.SetActive(true);
         }
     }
-    
-    private void OnCollisionEnter(Collision collision) {
-        var other = collision.gameObject;
-        if (((1 << other.layer) & playerLayer) == 0) return;
-        HandlePlayerCollision();
-    }
 
-    private void OnValidate() {
-        if (playerLayer != 0) return;
-        var playerLayerIndex = LayerMask.NameToLayer("Player");
-        if (playerLayerIndex != -1) {
-            playerLayer = 1 << playerLayerIndex;
-        }
-    }
+    protected override void HandleTrigger(GameObject other) { }
 }
