@@ -1,16 +1,29 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour
-{
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
+[Serializable]
+public class AudioCue {
+    [SerializeField] private AudioClip audioClip;
+    [SerializeField] public AudioSourceEventChannel audioTriggerChannel;
+
+    public void HandlePlayAudio(AudioSource source) { 
+    
+    }
+}
+
+public class AudioManager : MonoBehaviour {
+    [SerializeField] private List<AudioCue> cues;
+
+    private void OnEnable() {
+        foreach (var cue in cues) {
+            cue.audioTriggerChannel.OnEventRaised += cue.HandlePlayAudio;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    private void OnDisable() {
+        foreach (var cue in cues) {
+            cue.audioTriggerChannel.OnEventRaised -= cue.HandlePlayAudio;
+        }
     }
 }
