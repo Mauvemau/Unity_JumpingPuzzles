@@ -5,11 +5,9 @@ using UnityEngine.UI;
 
 public class TextPromptPanel : MonoBehaviour {
     [Header("Config")] 
-    [SerializeField]
-    private float promptDuration = 8f;
+    [SerializeField] private float promptDuration = 8f;
     [Header("Event Listeners")]
-    [SerializeField]
-    private StringEventChannel textPromptPanelEventChannel;
+    [SerializeField] private StringEventChannel textPromptPanelEventChannel;
     
     private Coroutine _activePromptCoroutine;
     private TextMeshProUGUI _textDisplay;

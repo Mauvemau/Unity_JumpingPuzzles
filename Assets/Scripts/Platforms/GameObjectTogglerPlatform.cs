@@ -6,10 +6,8 @@ using UnityEngine;
 /// </summary>
 public class GameObjectTogglerPlatform : CollisionInteractable {
     [Header("References")]
-    [SerializeField] 
-    private List<GameObject> objectsToEnable;
-    [SerializeField]
-    private List<GameObject> objectsToDisable;
+    [SerializeField] private List<GameObject> objectsToEnable;
+    [SerializeField] private List<GameObject> objectsToDisable;
 
     protected override void HandleCollision(GameObject other) {
         if (objectsToDisable.Count > 0) {

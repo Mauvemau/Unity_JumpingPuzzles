@@ -7,37 +7,29 @@ using UnityEngine;
 public class PlayerCharacterController : MonoBehaviour {
     private Character _character;
     [Header("Movement")]
-    [SerializeField]
     [Min(0)]
-    private float speed = 25f;
-    [SerializeField]
+    [SerializeField] private float speed = 25f;
     [Min(0)]
-    private float force = 30f;
-    [SerializeField]
+    [SerializeField] private float force = 30f;
     [Min(0)]
     [Tooltip("Multiplies the amount of force applied to the character when airborne")]
-    private float airControlFactor = .8f;
+    [SerializeField] private float airControlFactor = .8f;
     [Header("Jump")]
     [Min(0)]
-    [SerializeField]
-    private float jumpForce = 5f;
+    [SerializeField] private float jumpForce = 5f;
     [Min(0)]
-    [SerializeField]
     [Tooltip("Vertical continuous force applied to the character when holding jump")]
-    private float holdJumpForce = 10f;
+    [SerializeField] private float holdJumpForce = 10f;
     [Min(0)]
-    [SerializeField]
     [Tooltip("Amount of time the player is allowed to holdJump")]
-    private float holdJumpTime = .35f;
-    [SerializeField]
+    [SerializeField] private float holdJumpTime = .35f;
     [Min(0)]
     [Tooltip("Defines the time window in which a jump input will be accepted if it's pressed before the character has landed")]
-    private float earlyJumpWindow = .2f;
+    [SerializeField] private float earlyJumpWindow = .2f;
 
     [Header("Debug")]
-    [SerializeField]
     [Tooltip("Allows the player to fly... sort of")]
-    private bool infiniteJump = false;
+    [SerializeField] private bool infiniteJump = false;
 
     public void ToggleInfiniteJump() {
         infiniteJump = !infiniteJump;

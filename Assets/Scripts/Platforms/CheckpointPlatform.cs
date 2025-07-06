@@ -6,8 +6,7 @@ using UnityEngine;
 /// </summary>
 public class CheckpointPlatform : CollisionInteractable {
     [Header("Offset Config")] 
-    [SerializeField]
-    private Vector3 respawnOffset;
+    [SerializeField] private Vector3 respawnOffset;
     
     protected override void HandleCollision(GameObject other) {
         if (!ServiceLocator.TryGetService<GameManager>(out var gameManager)) return;

@@ -9,12 +9,10 @@ using UnityEngine.Serialization;
 [Serializable]
 public class SceneData {
 #if UNITY_EDITOR
-    [SerializeField]
-    private SceneAsset sceneAsset;
+    [SerializeField] private SceneAsset sceneAsset;
 #endif
-    [SerializeField]
     [HideInInspector]
-    private int sceneIndex;
+    [SerializeField] private int sceneIndex;
 
     public int Index => sceneIndex;
     
@@ -27,19 +25,17 @@ public class SceneData {
 
 public class MySceneManager : MonoBehaviour {
 #if UNITY_EDITOR
-    [SerializeField]
-    private List<SceneData> loadOnBoot = new List<SceneData>();
+    [SerializeField] private List<SceneData> loadOnBoot = new List<SceneData>();
 #endif
 
     private readonly List<AsyncOperation> _loadOperations = new List<AsyncOperation>();
     
-    [SerializeField]
     [HideInInspector]
-    private List<int> bootLoadQueue = new List<int>();
+    [SerializeField] private List<int> bootLoadQueue = new List<int>();
 
     // In case we want to make a loading screen for the boot load later
-    public static event Action OnStartLoadingScenes;
-    public static event Action OnFinishedLoadingScenes;
+    public static event Action OnStartLoadingScenes = delegate {};
+    public static event Action OnFinishedLoadingScenes = delegate {};
 
     private IEnumerator LoadBootScenes() {
         OnStartLoadingScenes?.Invoke();

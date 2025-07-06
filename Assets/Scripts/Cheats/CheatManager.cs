@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class CheatManager : MonoBehaviour {
     [Header("Config")]
-    [SerializeField]
-    private List<Transform> quickTeleportWaypoints;
+    [SerializeField] private List<Transform> quickTeleportWaypoints;
 
     private PlayerCharacter _playerCharacterReference;
     private PlayerCharacterController _playerControllerReference;

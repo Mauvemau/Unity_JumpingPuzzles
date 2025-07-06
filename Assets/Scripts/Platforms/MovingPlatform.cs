@@ -13,10 +13,9 @@ public class MovementNode {
 [RequireComponent(typeof(Rigidbody))]
 public class MovingPlatform : MonoBehaviour {
     [Header("Config")]
-    [SerializeField]
-    private List<MovementNode> movementNodes = new List<MovementNode>();
-    [SerializeField] 
-    private float speed = 5f;
+    [SerializeField] private List<MovementNode> movementNodes = new List<MovementNode>();
+    [Tooltip("Speed in which the platform will move between the nodes")]
+    [SerializeField] private float speed = 5f;
     
     private Rigidbody _rb;
     private int _currentNode;

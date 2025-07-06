@@ -3,9 +3,8 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerCharacterController))]
 public class PlayerCharacter : Character {
     [Header("Anchoring Config")]
-    [SerializeField]
     [Tooltip("Used for camera-based movement and animations")]
-    private MainCamera cameraReference;
+    [SerializeField] private MainCamera cameraReference;
 
     /// <summary>
     /// Allows the camera to assign a reference to itself to the player

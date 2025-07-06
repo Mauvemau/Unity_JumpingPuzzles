@@ -6,8 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public abstract class CollisionInteractable : MonoBehaviour {
     [Header("Layering Config")]
-    [SerializeField]
-    private LayerMask collisionFilter;
+    [SerializeField] private LayerMask collisionFilter;
 
     protected abstract void HandleCollision(GameObject other);
     protected abstract void HandleTrigger(GameObject other);

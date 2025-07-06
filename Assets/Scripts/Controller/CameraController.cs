@@ -6,12 +6,10 @@ using UnityEngine;
 [RequireComponent(typeof(MainCamera))]
 public class CameraController : MonoBehaviour {
     private MainCamera _camera;
-    [SerializeField]
     [Min(0)]
-    private float mouseSensitivity = .5f;
-    [SerializeField]
+    [SerializeField] private float mouseSensitivity = .5f;
     [Min(0)]
-    private float analogStickSensitivity = 100.0f;
+    [SerializeField] private float analogStickSensitivity = 100.0f;
     
     public void OnLook(Vector2 directionInput, bool isMouseInput) {
         if (!_camera) return;

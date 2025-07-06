@@ -30,40 +30,27 @@ public static class ActionBuffer {
 /// </summary>
 public class InputManager : MonoBehaviour {
     [Header("References")]
-    [SerializeField]
-    private PlayerCharacterController playerControllerReference;
-    [SerializeField]
-    private CameraController cameraControllerReference;
-    [SerializeField]
-    private GameManager gameManagerReference;
+    [SerializeField] private PlayerCharacterController playerControllerReference;
+    [SerializeField] private CameraController cameraControllerReference;
+    [SerializeField] private GameManager gameManagerReference;
     
     [Header("Player Actions")]
-    [SerializeField]
-    private InputActionReference moveAction;
-    [SerializeField]
-    private InputActionReference lookAction;
-    [SerializeField]
-    private InputActionReference jumpAction;
-    [SerializeField]
-    private InputActionReference respawnAction;
+    [SerializeField] private InputActionReference moveAction;
+    [SerializeField] private InputActionReference lookAction;
+    [SerializeField] private InputActionReference jumpAction;
+    [SerializeField] private InputActionReference respawnAction;
 
     [Header("Debug Actions")] 
-    [SerializeField]
-    private InputActionReference cheatLevelAction;
-    [SerializeField] 
-    private InputActionReference cheatJumpAction;
-    [SerializeField] 
-    private InputActionReference cheatSpeedAction;
+    [SerializeField] private InputActionReference cheatLevelAction;
+    [SerializeField] private InputActionReference cheatJumpAction;
+    [SerializeField] private InputActionReference cheatSpeedAction;
 
     [Header("UI Actions")] 
-    [SerializeField]
-    private InputActionReference requestPauseGameAction;
-    [SerializeField]
+    [SerializeField] private InputActionReference requestPauseGameAction;
     [Tooltip("Toggles between locked and unlocked camera")]
-    private InputActionReference toggleMouseLockAction;
-    [SerializeField]
+    [SerializeField] private InputActionReference toggleMouseLockAction;
     [Tooltip("Toggles between locked and unlocked camera only when the player is holding the button")]
-    private InputActionReference holdToggleMouseLockAction;
+    [SerializeField] private InputActionReference holdToggleMouseLockAction;
     
     public static event Action OnCheatLevelInputPerformed = delegate {};
     public static event Action OnCheatJumpInputPerformed = delegate {};

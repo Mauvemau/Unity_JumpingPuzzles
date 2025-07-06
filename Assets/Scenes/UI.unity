@@ -713,7 +713,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &430230932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1107,7 +1107,7 @@ GameObject:
   - component: {fileID: 893965047}
   - component: {fileID: 893965046}
   m_Layer: 0
-  m_Name: UI Manager
+  m_Name: Navigation Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1677,10 +1677,10 @@ RectTransform:
   - {fileID: 1227639364}
   m_Father: {fileID: 1709948093}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 110, y: -133.16667}
-  m_SizeDelta: {x: 220, y: 43.666668}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1172153749
 MonoBehaviour:
@@ -3149,10 +3149,10 @@ RectTransform:
   - {fileID: 1434029858}
   m_Father: {fileID: 1709948093}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 110, y: -21.833334}
-  m_SizeDelta: {x: 220, y: 43.666668}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2099267874
 MonoBehaviour:
@@ -3339,10 +3339,10 @@ RectTransform:
   - {fileID: 1096495362}
   m_Father: {fileID: 1709948093}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 110, y: -77.5}
-  m_SizeDelta: {x: 220, y: 43.666668}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2125249767
 MonoBehaviour:
@@ -3455,7 +3455,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 893965047}
-  - {fileID: 931033046}
   - {fileID: 430230935}
   - {fileID: 1558041900}
   - {fileID: 1518350409}
+  - {fileID: 931033046}

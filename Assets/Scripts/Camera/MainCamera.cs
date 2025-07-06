@@ -6,30 +6,28 @@ using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 /// Controls the behaviour of the camera and it's position
 /// </summary>
 public class MainCamera : MonoBehaviour {
-    [SerializeField] 
-    private Transform target;
+    [Tooltip("Target followed by the camera")]
+    [SerializeField] private Transform target;
     [Header("Rotation")]
-    [SerializeField]
     [Min(0)]
-    private float horizontalSpeed = 1f;
-    [SerializeField]
+    [SerializeField] private float horizontalSpeed = 1f;
     [Min(0)]
-    private float verticalSpeed = 1f;
-    [SerializeField]
-    private float minClampAngle = -80f;
-    [SerializeField]
-    private float maxClampAngle = 80f;
+    [SerializeField] private float verticalSpeed = 1f;
+    [Tooltip("Angle in which the camera stops rotating vertically")]
+    [SerializeField] private float minClampAngle = -80f;
+    [Tooltip("Angle in which the camera stops rotating vertically")]
+    [SerializeField] private float maxClampAngle = 80f;
     [Header("Collision")]
-    [SerializeField]
-    private LayerMask collisionLayer;
-    [SerializeField]
-    private float collisionRadius = .3f;
-    [SerializeField]
+    [Tooltip("The layer the camera will collide with")]
+    [SerializeField] private LayerMask collisionLayer;
+    [Tooltip("The size of the sphere collision around the camera")]
+    [SerializeField] private float collisionRadius = .3f;
     [Min(0)]
-    private float minDistance = 1f;
-    [SerializeField]
+    [Tooltip("How close to the target the camera can get")]
+    [SerializeField] private float minDistance = 1f;
     [Min(0)]
-    private float maxDistance = 7f;
+    [Tooltip("How far from the target the camera can get")]
+    [SerializeField] private float maxDistance = 7f;
 
     private Vector2 _mouseInput;
     private Vector2 _analogInput;

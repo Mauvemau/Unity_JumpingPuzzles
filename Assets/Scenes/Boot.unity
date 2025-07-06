@@ -325,7 +325,9 @@ MonoBehaviour:
     sceneIndex: 2
   - sceneAsset: {fileID: 102900000, guid: 1d2dd98d699f34a96b58388942469e0f, type: 3}
     sceneIndex: 3
-  bootLoadQueue: 010000000200000003000000
+  - sceneAsset: {fileID: 102900000, guid: 904efd9525e7c770ca1b048d71ecdb59, type: 3}
+    sceneIndex: 4
+  bootLoadQueue: 01000000020000000300000004000000
 --- !u!4 &1167026665
 Transform:
   m_ObjectHideFlags: 0

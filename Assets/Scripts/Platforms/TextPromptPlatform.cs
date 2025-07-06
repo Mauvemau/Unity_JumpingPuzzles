@@ -5,12 +5,10 @@ using UnityEngine;
 /// </summary>
 public class TextPromptPlatform : CollisionInteractable {
     [Header("Text")] 
-    [SerializeField] 
-    private TextContainer textToDisplay;
+    [SerializeField] private TextContainer textToDisplay;
     
     [Header("Event Invokers")] 
-    [SerializeField]
-    private StringEventChannel textPromptPanelEventChannel;
+    [SerializeField] private StringEventChannel textPromptPanelEventChannel;
 
     protected override void HandleCollision(GameObject other) {
         if (!textPromptPanelEventChannel) return;

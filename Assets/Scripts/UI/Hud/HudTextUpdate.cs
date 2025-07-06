@@ -9,8 +9,7 @@ using UnityEngine;
 [RequireComponent(typeof(TextMeshProUGUI))]
 public class HudTextUpdate : MonoBehaviour {
     [Header("Event Listeners")]
-    [SerializeField]
-    private StringEventChannel textUpdateChannel;
+    [SerializeField] private StringEventChannel textUpdateChannel;
 
     private TextMeshProUGUI _textDisplay;
     
