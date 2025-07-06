@@ -4,7 +4,14 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
+
+public interface ISceneManager {
+    public void LoadNewScene(int sceneIndex);
+    public void LoadSceneAdditive(int sceneIndex);
+    public void UnloadScene(int sceneIndex);
+    public void ActivateLoadedScene();
+
+}
 
 [Serializable]
 public class SceneData {
@@ -23,7 +30,7 @@ public class SceneData {
     }
 }
 
-public class MySceneManager : MonoBehaviour {
+public class MySceneManager : MonoBehaviour, ISceneManager {
 #if UNITY_EDITOR
     [SerializeField] private List<SceneData> loadOnBoot = new List<SceneData>();
 #endif

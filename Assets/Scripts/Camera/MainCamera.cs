@@ -46,13 +46,11 @@ public class MainCamera : MonoBehaviour {
         return transform.right;
     }
 
-    public void RequestMouseRotation(Vector2 delta)
-    {
+    public void RequestMouseRotation(Vector2 delta) {
         _mouseInput += delta;
     }
 
-    public void RequestAnalogRotation(Vector2 input)
-    {
+    public void RequestAnalogRotation(Vector2 input) {
         _analogInput = input;
     }
 
@@ -62,15 +60,15 @@ public class MainCamera : MonoBehaviour {
         player.AssignCameraReference(this);
     }
 
-    private Vector3 HandleCameraCollision(Vector3 desiredPosition)
-    {
+    private Vector3 HandleCameraCollision(Vector3 desiredPosition) {
         var direction = (desiredPosition - target.position).normalized;
         var maxCheckDistance = Vector3.Distance(target.position, desiredPosition);
 
-        if (!Physics.SphereCast(target.position, collisionRadius, direction, out var hit, maxCheckDistance, collisionLayer)) return desiredPosition;
+        if (!Physics.SphereCast(target.position, collisionRadius, direction, out var hit, maxCheckDistance, collisionLayer)) 
+            return desiredPosition;
+        
         var clampedDistance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
         return target.position + direction * clampedDistance;
-
     }
 
     private void HandleCameraRotation() {

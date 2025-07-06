@@ -30,7 +30,7 @@ public class AudioManager : MonoBehaviour {
     private void Play3DSound(AudioClip clip, Vector3 position) {
         if (!sfx3DPrefab) return;
         if (!clip) return;
-        var source = Instantiate(sfx3DPrefab, position, Quaternion.identity);
+        var source = Instantiate(sfx3DPrefab, position, Quaternion.identity, transform);
         source.clip = clip;
         source.Play();
         Destroy(source.gameObject, clip.length);

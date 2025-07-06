@@ -51,11 +51,13 @@ public class NavigationManager : MonoBehaviour {
     [SerializeField] private bool activeOnAwake = false;
     [Tooltip("Contains the references of all the canvases in the navigation system")]
     [SerializeField] private List<ToggleableCanvas> canvases;
-    private int _mainCanvasIndex = -1;
 
     [Header("Sound Effects")] 
     [SerializeField] private AudioClip2DContainer buttonPressedSfx;
     [SerializeField] private AudioClip2DContainer buttonSelectedSfx;
+    
+    private int _mainCanvasIndex = -1;
+    private Button _currentFirstSelected;
     
     /// <summary>
     /// Lets the Input manager know when to lock/unlock mouse.
@@ -78,9 +80,11 @@ public class NavigationManager : MonoBehaviour {
     
     private void SelectButton(Button button) {
         if (!eventSystem) return;
+        _currentFirstSelected = button;
         if (eventSystem.TryGetComponent<BaseInputModule>(out var inputModule)) {
-            inputModule.enabled = true; // If the canvas contains a button it means it has input
+            inputModule.enabled = true;
         }
+
         eventSystem.SetSelectedGameObject(null);
         eventSystem.SetSelectedGameObject(button.gameObject);
         OnToggleUI?.Invoke(true);
@@ -91,7 +95,13 @@ public class NavigationManager : MonoBehaviour {
             canvas.Toggle(false);
         }
     }
-
+    
+    private void Update() {
+        if (eventSystem && !eventSystem.currentSelectedGameObject && _currentFirstSelected) {
+            eventSystem.SetSelectedGameObject(_currentFirstSelected.gameObject);
+        }
+    }
+    
     private void Awake() {
         if (!eventSystem) {
             Debug.LogError($"{name}: There is no Event System assigned!!");
