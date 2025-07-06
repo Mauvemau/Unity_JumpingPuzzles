@@ -114,6 +114,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  pickupSfx: {fileID: 11400000, guid: 44b9a8e6c91c270f4938c4f786ba1421, type: 2}
 --- !u!114 &170909181465994990
 MonoBehaviour:
   m_ObjectHideFlags: 0

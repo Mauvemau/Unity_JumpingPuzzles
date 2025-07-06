@@ -335,6 +335,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  pickupSfx: {fileID: 11400000, guid: 44b9a8e6c91c270f4938c4f786ba1421, type: 2}
 --- !u!1 &187869309
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,9 +414,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfx2DSource: {fileID: 196594024}
   sfx3DPrefab: {fileID: 1348162855702475501, guid: d9318bcbbbdafedf2815f0af119bdfb8, type: 3}
+  musicSource: {fileID: 0}
+  musicPlaylist: []
   audio2DChannels:
   - {fileID: 11400000, guid: 599678a106017844597ea0701819563a, type: 2}
   - {fileID: 11400000, guid: b508e5f74079eece3b8e69216900d402, type: 2}
+  - {fileID: 11400000, guid: bf0a144a45065921588b786f954b2286, type: 2}
   audio3DChannels:
   - {fileID: 11400000, guid: bb9e967f896f5715ba957f2539a8d6e4, type: 2}
   - {fileID: 11400000, guid: bb7faf6f8ab5ca2e6b313ec4ae82c52e, type: 2}
@@ -671,6 +675,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  pickupSfx: {fileID: 11400000, guid: 44b9a8e6c91c270f4938c4f786ba1421, type: 2}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1225,6 +1230,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  pickupSfx: {fileID: 11400000, guid: 44b9a8e6c91c270f4938c4f786ba1421, type: 2}
 --- !u!1 &1263848749
 GameObject:
   m_ObjectHideFlags: 0
@@ -1586,6 +1592,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  pickupSfx: {fileID: 11400000, guid: 44b9a8e6c91c270f4938c4f786ba1421, type: 2}
 --- !u!1 &1875902271
 GameObject:
   m_ObjectHideFlags: 0

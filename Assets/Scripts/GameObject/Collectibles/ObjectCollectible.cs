@@ -13,6 +13,9 @@ public class ObjectCollectible : MonoBehaviour
     [SerializeField] private CollectibleType type = CollectibleType.MainObjective;
     [SerializeField] private LayerMask playerLayer;
 
+    [Header("Sound Effects")] 
+    [SerializeField] private AudioClip2DContainer pickupSfx;
+    
     private CollectibleManager _collectibleManagerReference;
     private Collider _colliderReference;
     private bool _triggered = false; // Prevent from triggering more than once.
@@ -21,6 +24,9 @@ public class ObjectCollectible : MonoBehaviour
         if (!_collectibleManagerReference) return;
         
         _collectibleManagerReference.OnCollectibleCollected(type);
+        if (pickupSfx) {
+            pickupSfx.PlayAudioClip();
+        }
         gameObject.SetActive(false);
     }
 

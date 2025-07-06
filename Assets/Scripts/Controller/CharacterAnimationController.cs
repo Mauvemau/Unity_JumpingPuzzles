@@ -22,13 +22,11 @@ public class CharacterAnimationController : MonoBehaviour {
     private bool _isJumping = false;
 
     public void HandleLandingFeedback() {
-        Debug.Log("Landed!");
         if (!landingSfx) return;
         landingSfx.PlayAudioClip(transform.position);
     }
     
     public void HandleJumpingFeedback() {
-        Debug.Log("Jumped!");
         if (!jumpingSfx) return; 
         landingSfx.PlayAudioClip(transform.position);
     }
