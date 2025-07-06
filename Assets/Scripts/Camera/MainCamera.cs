@@ -66,19 +66,17 @@ public class MainCamera : MonoBehaviour {
 
     private Vector3 HandleCameraCollision(Vector3 desiredPosition)
     {
-        Vector3 direction = (desiredPosition - target.position).normalized;
-        float maxCheckDistance = Vector3.Distance(target.position, desiredPosition);
+        var direction = (desiredPosition - target.position).normalized;
+        var maxCheckDistance = Vector3.Distance(target.position, desiredPosition);
 
-        if (Physics.SphereCast(target.position, collisionRadius, direction, out var hit, maxCheckDistance, collisionLayer)) {
-            float clampedDistance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
-            return target.position + direction * clampedDistance;
-        }
+        if (!Physics.SphereCast(target.position, collisionRadius, direction, out var hit, maxCheckDistance, collisionLayer)) return desiredPosition;
+        var clampedDistance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
+        return target.position + direction * clampedDistance;
 
-        return desiredPosition;
     }
 
     private void HandleCameraRotation() {
-        Vector2 analogDelta = _analogInput * Time.deltaTime;
+        var analogDelta = _analogInput * Time.deltaTime;
 
         _yaw += (_mouseInput.x * horizontalSpeed) + (analogDelta.x * horizontalSpeed);
         _pitch -= (_mouseInput.y * verticalSpeed) + (analogDelta.y * verticalSpeed);
@@ -86,10 +84,10 @@ public class MainCamera : MonoBehaviour {
 
         _mouseInput = Vector2.zero;
 
-        float distance = Mathf.Clamp(_currentDistance, minDistance, maxDistance);
-        Quaternion rotation = Quaternion.Euler(_pitch, _yaw, 0f);
-        Vector3 offset = rotation * new Vector3(0f, 0f, -distance);
-        Vector3 desiredPosition = target.position + offset;
+        var distance = Mathf.Clamp(_currentDistance, minDistance, maxDistance);
+        var rotation = Quaternion.Euler(_pitch, _yaw, 0f);
+        var offset = rotation * new Vector3(0f, 0f, -distance);
+        var desiredPosition = target.position + offset;
 
         transform.position = HandleCameraCollision(desiredPosition);
         transform.LookAt(target);
@@ -115,10 +113,7 @@ public class MainCamera : MonoBehaviour {
         _defaultPosition = transform.position;
         _defaultRotation = transform.rotation;
         _currentDistance = maxDistance;
-
-        if (!target) {
-            Debug.Log($"{name}: The camera doesn't currently have a {nameof(target)}, verify if intended.");
-        }
+        
         if (collisionLayer.value == 0) {
             Debug.Log($"{name}: {nameof(collisionLayer)} is not configured, verify if intended.");
         }
@@ -128,13 +123,14 @@ public class MainCamera : MonoBehaviour {
         if (verticalSpeed == 0) {
             Debug.LogWarning($"{name}: {nameof(verticalSpeed)} is currently set to 0!");
         }
+        ServiceLocator.SetService(this);
     }
 
     private void OnEnable() {
-        GameManager.OnPlayerSpawned += OnPlayerSpawned;
+        GameManager.OnGameStarted += OnPlayerSpawned;
     }
 
     private void OnDisable() {
-        GameManager.OnPlayerSpawned -= OnPlayerSpawned;
+        GameManager.OnGameStarted -= OnPlayerSpawned;
     }
 }

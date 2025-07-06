@@ -59,14 +59,14 @@ public class CheatManager : MonoBehaviour {
     }
 
     private void OnEnable() {
-        GameManager.OnPlayerSpawned += OnGameStarted;
+        GameManager.OnGameStarted += OnGameStarted;
         InputManager.OnCheatLevelInputPerformed += RequestSkipLevel;
         InputManager.OnCheatJumpInputPerformed += RequestInfiniteJump;
         InputManager.OnCheatSpeedInputPerformed += RequestSuperSpeed;
     }
 
     private void OnDisable() {
-        GameManager.OnPlayerSpawned -= OnGameStarted;
+        GameManager.OnGameStarted -= OnGameStarted;
         InputManager.OnCheatLevelInputPerformed -= RequestSkipLevel;
         InputManager.OnCheatJumpInputPerformed -= RequestInfiniteJump;
         InputManager.OnCheatSpeedInputPerformed -= RequestSuperSpeed;

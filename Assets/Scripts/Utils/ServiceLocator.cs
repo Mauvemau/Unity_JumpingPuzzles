@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public static class ServiceLocator {
     private static readonly Dictionary<Type, object> Services = new();
 
     public static void SetService<T>(T service, bool overrideIfFound = false) {
+        Debug.Log($"{typeof(ServiceLocator)}: Service registered - {typeof(T)}");
         if (!Services.TryAdd(typeof(T), service) && overrideIfFound) {
             Services[typeof(T)] = service;
         }

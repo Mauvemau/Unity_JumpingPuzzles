@@ -24,7 +24,10 @@ public class CameraController : MonoBehaviour {
     }
 
     private void Awake() {
-        _camera = GetComponent<MainCamera>();
+        if(TryGetComponent<MainCamera>(out var cameraComponent)) {
+            _camera = cameraComponent;
+            ServiceLocator.SetService(this);
+        }
         if(!_camera) {
             Debug.LogError($"{name}: {nameof(_camera)} is null!");
         }

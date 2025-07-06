@@ -57,19 +57,15 @@ public class InputManager : MonoBehaviour {
 
     [Header("UI Actions")] 
     [SerializeField]
-    private InputActionReference togglePauseMenuAction;
+    private InputActionReference requestPauseGameAction;
     [SerializeField]
     [Tooltip("Toggles between locked and unlocked camera")]
     private InputActionReference toggleMouseLockAction;
     [SerializeField]
     [Tooltip("Toggles between locked and unlocked camera only when the player is holding the button")]
     private InputActionReference holdToggleMouseLockAction;
-
-    [Header("EventInvokers")] 
-    [SerializeField]
-    private BoolEventChannel uIToggleInputChannel;
     
-    public static event Action OnCheatLevelInputPerformed = delegate {}; // Cleaner to just do this with every input?
+    public static event Action OnCheatLevelInputPerformed = delegate {};
     public static event Action OnCheatJumpInputPerformed = delegate {};
     public static event Action OnCheatSpeedInputPerformed = delegate {};
     
@@ -83,33 +79,37 @@ public class InputManager : MonoBehaviour {
     }
     
     private void OnPlayerSpawned() {
-        if (!ServiceLocator.TryGetService<PlayerCharacterController>(out var playerController)) return;
-        playerControllerReference = playerController;
-        if (ServiceLocator.TryGetService<GameManager>(out var gameManager)) {
-            gameManagerReference = gameManager;
+        if (!ServiceLocator.TryGetService<PlayerCharacterController>(out var playerController)) {
+            Debug.LogError($"{name}: There is no PlayerCharacterController entry in the Service Locator!!");
+            return;
         }
+        playerControllerReference = playerController;
+        if (!ServiceLocator.TryGetService<CameraController>(out var cameraController)) {
+            Debug.LogError($"{name}: There is no CameraController entry in the Service Locator!!");
+            return;
+        }
+        cameraControllerReference = cameraController;
+        if (!ServiceLocator.TryGetService<GameManager>(out var gameManager)) {
+            Debug.LogError($"{name}: There is no GameManager entry in the Service Locator!!");
+            return;
+        }
+        gameManagerReference = gameManager;
     }
 
-    private void HandleTogglePauseMenuInput(InputAction.CallbackContext ctx) {
-        UIManager.InvokeOnPauseMenuToggleRequest(true);
+    private void HandleUIToggled(bool active) {
+        SetMouseLocked(!active); // Active = Unlocked / Unactive = Locked
     }
     
     private void SetMouseLocked(bool locked) {
         _mouseLocked = locked;
         if (_mouseLocked) {
-            uIToggleInputChannel.RaiseEvent(false); // We disable all UI input when the mouse is locked.
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         } 
         else {
-            uIToggleInputChannel.RaiseEvent(true);
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
-    }
-
-    private void HandleToggleMouseLockUI(bool uiPanelActive) {
-        SetMouseLocked(!uiPanelActive); // We want to unlock the mouse when a panel is active
     }
     
     private void HandleToggleMouseLockInput(InputAction.CallbackContext ctx) {
@@ -118,6 +118,12 @@ public class InputManager : MonoBehaviour {
 #endif
     }
 
+    private void HandleRequestPauseGameInput(InputAction.CallbackContext ctx) {
+        if (!ShouldReadGameplayRelatedInput()) return;
+        if (!gameManagerReference) return;
+        gameManagerReference.SetGamePaused(true);
+    }
+    
     private void HandleCheatLevelInput(InputAction.CallbackContext ctx) {
         if (!ShouldReadGameplayRelatedInput()) return;
         OnCheatLevelInputPerformed?.Invoke();
@@ -173,12 +179,6 @@ public class InputManager : MonoBehaviour {
     }
 
     private void Awake() {
-        if(!playerControllerReference) {
-            Debug.Log($"{name} doesn't currently have a player controller reference, verify if intended.");
-        }
-        if (!cameraControllerReference) {
-            Debug.Log($"{name} doesn't currently have a camera controller reference, verify if intended.");
-        }
         if (!moveAction) {
             Debug.LogWarning($"{name}: {nameof(moveAction)} is null!");
         }
@@ -202,8 +202,8 @@ public class InputManager : MonoBehaviour {
             Debug.LogWarning($"{name}: {nameof(cheatSpeedAction)} is null!");
         }
         
-        if (!togglePauseMenuAction) {
-            Debug.LogWarning($"{name}: {nameof(togglePauseMenuAction)} is null!");
+        if (!requestPauseGameAction) {
+            Debug.LogWarning($"{name}: {nameof(requestPauseGameAction)} is null!");
         }
         if (!toggleMouseLockAction) {
             Debug.LogWarning($"{name}: {nameof(toggleMouseLockAction)} is null!");
@@ -214,8 +214,8 @@ public class InputManager : MonoBehaviour {
     }
 
     private void OnEnable() {
-        GameManager.OnPlayerSpawned += OnPlayerSpawned;
-        UIManager.OnMenuToggled += HandleToggleMouseLockUI;
+        GameManager.OnGameStarted += OnPlayerSpawned;
+        NavigationManager.OnToggleUI += HandleUIToggled;
         
         //
         
@@ -247,9 +247,8 @@ public class InputManager : MonoBehaviour {
             cheatSpeedAction.action.started += HandleCheatSpeedInput;
         }
         
-        
-        if (togglePauseMenuAction) {
-            togglePauseMenuAction.action.started += HandleTogglePauseMenuInput;
+        if (requestPauseGameAction) {
+            requestPauseGameAction.action.started += HandleRequestPauseGameInput;
         }
         if (holdToggleMouseLockAction) {
             holdToggleMouseLockAction.action.started += HandleToggleMouseLockInput;
@@ -261,8 +260,8 @@ public class InputManager : MonoBehaviour {
     }
     
     private void OnDisable() {
-        GameManager.OnPlayerSpawned -= OnPlayerSpawned;
-        UIManager.OnMenuToggled -= HandleToggleMouseLockUI;
+        GameManager.OnGameStarted -= OnPlayerSpawned;
+        NavigationManager.OnToggleUI -= HandleUIToggled;
         
         //
         
@@ -293,9 +292,9 @@ public class InputManager : MonoBehaviour {
         if (cheatSpeedAction) {
             cheatSpeedAction.action.started -= HandleCheatSpeedInput;
         }
-        
-        if (togglePauseMenuAction) {
-            togglePauseMenuAction.action.started -= HandleTogglePauseMenuInput;
+
+        if (requestPauseGameAction) {
+            requestPauseGameAction.action.started += HandleRequestPauseGameInput;
         }
         if (holdToggleMouseLockAction) {
             holdToggleMouseLockAction.action.started -= HandleToggleMouseLockInput;

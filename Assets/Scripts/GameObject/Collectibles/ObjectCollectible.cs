@@ -56,10 +56,10 @@ public class ObjectCollectible : MonoBehaviour
     }
 
     private void OnEnable() {
-        GameManager.OnPlayerSpawned += OnGameStarted;
+        GameManager.OnGameStarted += OnGameStarted;
     }
 
     private void OnDisable() {
-        GameManager.OnPlayerSpawned -= OnGameStarted;
+        GameManager.OnGameStarted -= OnGameStarted;
     }
 }

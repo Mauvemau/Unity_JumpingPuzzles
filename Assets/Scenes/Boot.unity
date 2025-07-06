@@ -320,14 +320,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadOnBoot:
   - sceneAsset: {fileID: 102900000, guid: 99c9720ab356a0642a771bea13969a05, type: 3}
-    sceneIndex: 2
-  - sceneAsset: {fileID: 102900000, guid: 3085c35675196ee4588486f49914e15f, type: 3}
     sceneIndex: 1
-  - sceneAsset: {fileID: 102900000, guid: 792f00e4cf00ab394af42c0f062667b6, type: 3}
+  - sceneAsset: {fileID: 102900000, guid: e914a9baaa63904ab85aab4562de2779, type: 3}
+    sceneIndex: 2
+  - sceneAsset: {fileID: 102900000, guid: 1d2dd98d699f34a96b58388942469e0f, type: 3}
     sceneIndex: 3
-  - sceneAsset: {fileID: 102900000, guid: 6da084ecd8b0ec54ba85274648fb31f6, type: 3}
-    sceneIndex: 4
-  bootLoadQueue: 02000000010000000300000004000000
+  bootLoadQueue: 010000000200000003000000
 --- !u!4 &1167026665
 Transform:
   m_ObjectHideFlags: 0

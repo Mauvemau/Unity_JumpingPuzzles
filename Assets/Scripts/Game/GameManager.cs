@@ -3,29 +3,22 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
     [Header("Main Actors")] 
-    [SerializeField]
-    private GameObject playerPrefab;
+    [SerializeField] private GameObject playerPrefab;
 
     [Header("Game Configuration")]
-    [SerializeField]
-    private Transform defaultPlayerSpawnPosition;
+    [SerializeField] private Transform defaultPlayerSpawnPosition;
     
     [Header("Event Listeners")]
-    [SerializeField]
-    private VoidEventChannel initGameChannel;
-    [SerializeField] 
-    private VoidEventChannel endGameChannel;
-    [SerializeField] 
-    private VoidEventChannel exitApplicationChannel;
+    [SerializeField] private VoidEventChannel requestInitGameChannel;
+    [SerializeField] private VoidEventChannel requestEndGameChannel;
+    [SerializeField] private VoidEventChannel requestExitApplicationChannel;
+    [SerializeField] private BoolEventChannel requestPauseGame;
 
     [Header("Event Invokers")]
-    [SerializeField]
-    private BoolEventChannel toggleMainMenuChannel;
-    [SerializeField] 
-    private BoolEventChannel togglePauseMenuChannel;
+    [SerializeField] private BoolEventChannel requestTogglePauseMenuChannel;
     
     // Event Actions
-    public static event Action OnPlayerSpawned = delegate {};
+    public static event Action OnGameStarted = delegate {};
     public static event Action<bool> OnGamePaused = delegate {};
     
     private GameObject _playerInstance;
@@ -33,16 +26,19 @@ public class GameManager : MonoBehaviour {
     private bool _gameInitialized = false;
     private bool _gamePaused = false;
 
+    public void SetGamePaused(bool paused) {
+        _gamePaused = paused;
+        _playerInstance.SetActive(!paused);
+        if(requestTogglePauseMenuChannel)
+            requestTogglePauseMenuChannel.RaiseEvent(paused);
+        OnGamePaused?.Invoke(paused);
+    }
+    
     /// <summary>
     /// Returns if the game is initialized and not paused
     /// </summary>
     public bool GetIsGameReady() {
         return (_gameInitialized && !_gamePaused);
-    }
-    
-    public void RespawnPlayer() {
-        var player = _playerInstance.GetComponent<PlayerCharacter>();
-        player.RequestSetPosition(_currentPlayerSpawnPosition);
     }
     
     /// <summary>
@@ -52,25 +48,9 @@ public class GameManager : MonoBehaviour {
         _currentPlayerSpawnPosition = position;
     }
 
-    private void HandleGamePausing(bool paused) {
-        _gamePaused = paused;
-        _playerInstance.SetActive(!paused);
-        OnGamePaused?.Invoke(paused);
-    }
-    
-    /// <summary>
-    /// Makes pause menu visible or not
-    /// </summary> 
-    private void TogglePauseMenuVisibility(bool visible) {
-        if (!_gameInitialized) return;
-        togglePauseMenuChannel.RaiseEvent(visible);
-    }
-    
-    /// <summary>
-    /// Makes main menu visible or not
-    /// </summary>
-    private void ToggleMainMenuVisibility(bool visible) {
-        toggleMainMenuChannel.RaiseEvent(visible);
+    public void RespawnPlayer() {
+        var player = _playerInstance.GetComponent<PlayerCharacter>();
+        player.RequestSetPosition(_currentPlayerSpawnPosition);
     }
 
     [ContextMenu("Force Close Game")]
@@ -84,48 +64,37 @@ public class GameManager : MonoBehaviour {
     
     [ContextMenu("Force Init Game")]
     private void InitGame() {
-        if (_gameInitialized) return;
-        ToggleMainMenuVisibility(false);
-        _gameInitialized = true;
+        if (_gameInitialized) {
+            Debug.LogError($"{name}: Tried to start a game that has already been initialized!");
+            return;
+        }
+        _gamePaused = false;
         
         _playerInstance.SetActive(true);
+        OnGameStarted?.Invoke();
+        
+        _gameInitialized = true;
+    }
+
+    [ContextMenu("Force End Game")]
+    private void EndGame() {
+        _gameInitialized = false;
+        _gamePaused = false;
+        _currentPlayerSpawnPosition = !defaultPlayerSpawnPosition ? Vector3.zero : defaultPlayerSpawnPosition.position;
+        RespawnPlayer();
+        _playerInstance.SetActive(false);
+    }
+    
+    private void PerformInitialInit() {
+        ServiceLocator.SetService(this);
+        _currentPlayerSpawnPosition = !defaultPlayerSpawnPosition ? Vector3.zero : defaultPlayerSpawnPosition.position;
+        _playerInstance = Instantiate(playerPrefab, _currentPlayerSpawnPosition, Quaternion.identity);
+        _playerInstance.SetActive(false);
+        
         var characterPlayerComponent = _playerInstance.GetComponent<PlayerCharacter>();
         var controllerPlayerComponent = _playerInstance.GetComponent<PlayerCharacterController>();
         ServiceLocator.SetService(characterPlayerComponent);
         ServiceLocator.SetService(controllerPlayerComponent);
-        if (ServiceLocator.TryGetService<CollectibleManager>(out var collectibleManager)) {
-            collectibleManager.Clear();
-        }
-        OnPlayerSpawned?.Invoke();
-    }
-
-    private void ResetInstances() {
-        _gameInitialized = false;
-        if (!defaultPlayerSpawnPosition) {
-            _currentPlayerSpawnPosition = Vector3.zero;
-        }
-        else {
-            _currentPlayerSpawnPosition = defaultPlayerSpawnPosition.position;
-        }
-        var player = _playerInstance.GetComponent<PlayerCharacter>();
-        player.RequestSetPosition(defaultPlayerSpawnPosition.position);
-        _playerInstance.SetActive(false);
-    }
-    
-    [ContextMenu("Force End Game")]
-    private void EndGame() {
-        ResetInstances();
-    }
-    
-    private void LoadInstances() {
-        if(!defaultPlayerSpawnPosition) {
-            _currentPlayerSpawnPosition = Vector3.zero;
-        }
-        else {
-            _currentPlayerSpawnPosition = defaultPlayerSpawnPosition.position;
-        }
-        _playerInstance = Instantiate(playerPrefab, _currentPlayerSpawnPosition, Quaternion.identity);
-        _playerInstance.SetActive(false);
     }
     
     private void Awake() {
@@ -134,29 +103,32 @@ public class GameManager : MonoBehaviour {
             return;
         }
         if (!defaultPlayerSpawnPosition) {
-            Debug.LogError($"{name}: There is no default spawn position assigned! Defaulting to 0"); // TODO fix later
+            Debug.LogError($"{name}: There is no default spawn position assigned! Defaulting to 0");
         }
-        ServiceLocator.SetService(this);
-        LoadInstances();
+        PerformInitialInit();
     }
 
     private void OnEnable() {
-        // SO
-        initGameChannel.OnEventRaised += InitGame;
-        endGameChannel.OnEventRaised += EndGame;
-        exitApplicationChannel.OnEventRaised += ExitApplication;
-        togglePauseMenuChannel.OnEventRaised += HandleGamePausing;
-        //
-        UIManager.OnPauseMenuToggleRequest += TogglePauseMenuVisibility;
+        if(requestInitGameChannel)
+            requestInitGameChannel.OnEventRaised += InitGame;
+        if(requestEndGameChannel)
+            requestEndGameChannel.OnEventRaised += EndGame;
+        if (requestPauseGame)
+            requestPauseGame.OnEventRaised += SetGamePaused;
+        
+        if(requestExitApplicationChannel)
+            requestExitApplicationChannel.OnEventRaised += ExitApplication;
     }
 
     private void OnDisable() {
-        // SO
-        initGameChannel.OnEventRaised -= InitGame;
-        endGameChannel.OnEventRaised -= EndGame;
-        exitApplicationChannel.OnEventRaised -= ExitApplication;
-        togglePauseMenuChannel.OnEventRaised -= HandleGamePausing;
-        //
-        UIManager.OnPauseMenuToggleRequest -= TogglePauseMenuVisibility;
+        if(requestInitGameChannel)
+            requestInitGameChannel.OnEventRaised -= InitGame;
+        if(requestEndGameChannel)
+            requestEndGameChannel.OnEventRaised -= EndGame;
+        if (requestPauseGame)
+            requestPauseGame.OnEventRaised -= SetGamePaused;
+        
+        if(requestExitApplicationChannel)
+            requestExitApplicationChannel.OnEventRaised -= ExitApplication;
     }
 }

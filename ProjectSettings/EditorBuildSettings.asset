@@ -9,17 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/Boot.unity
     guid: aef3441a2effc1cfabd46fd6d08423f8
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
-    guid: 3085c35675196ee4588486f49914e15f
-  - enabled: 1
-    path: Assets/Scenes/Kitchen.unity
+    path: Assets/Scenes/KitchenLevel.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/PauseMenu.unity
-    guid: 792f00e4cf00ab394af42c0f062667b6
+    path: Assets/Scenes/UI.unity
+    guid: e914a9baaa63904ab85aab4562de2779
   - enabled: 1
-    path: Assets/Scenes/Credits.unity
-    guid: 6da084ecd8b0ec54ba85274648fb31f6
+    path: Assets/Scenes/Game.unity
+    guid: 1d2dd98d699f34a96b58388942469e0f
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
