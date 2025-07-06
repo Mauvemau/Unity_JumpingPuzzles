@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31f3130df2975de18ae82d52641ca0ea, type: 3}
+  m_Name: SO_SoundRandom3DFootsteps
+  m_EditorClassIdentifier: 
+  audioClips:
+  - {fileID: 8300000, guid: 3855025bb581be4e3b8126bf055e8deb, type: 3}
+  - {fileID: 8300000, guid: 54333e902ebd675bfb8e83e5dc473b72, type: 3}
+  - {fileID: 8300000, guid: 5621ad737b670743699109da57509311, type: 3}
+  - {fileID: 8300000, guid: d047796f6a165e145a8909c6f6a2b55b, type: 3}
+  - {fileID: 8300000, guid: 5d71128f621b3a297a24a1a79971e761, type: 3}
+  audioBroadcastChannel: {fileID: 11400000, guid: bb9e967f896f5715ba957f2539a8d6e4, type: 2}

@@ -41,7 +41,10 @@ public class ToggleableCanvas {
 /// Centralized class that handles the event system and configures external behaviour for canvases
 /// </summary>
 public class NavigationManager : MonoBehaviour {
+    [Header("References")]
     [SerializeField] private EventSystem eventSystem;
+    
+    [Header("Canvases")]
     [Tooltip("The main canvas, the root node of the navigation system. This is the first canvas that will be enabled")]
     [SerializeField] private Canvas mainCanvas;
     [Tooltip("If the UI should be enabled by default")]
@@ -49,11 +52,17 @@ public class NavigationManager : MonoBehaviour {
     [Tooltip("Contains the references of all the canvases in the navigation system")]
     [SerializeField] private List<ToggleableCanvas> canvases;
     private int _mainCanvasIndex = -1;
+
+    [Header("Sound Effects")] 
+    [SerializeField] private AudioClip2DContainer buttonPressedSfx;
+    [SerializeField] private AudioClip2DContainer buttonSelectedSfx;
     
     /// <summary>
     /// Lets the Input manager know when to lock/unlock mouse.
     /// </summary>
     public static event Action<bool> OnToggleUI = delegate {};
+    
+    private GameObject _lastSelected;
 
     private void HandleCanvasDisabled() {
         ToggleEventSystemInput(false);
@@ -115,8 +124,7 @@ public class NavigationManager : MonoBehaviour {
         _mainCanvasIndex = -1;
         Debug.LogWarning($"{name}: Main canvas not found in the canvas list!");
     }
-
-
+    
     private void OnEnable() {
         foreach (var canvas in canvases) {
             canvas.toggleListenerChannel.OnEventRaised += canvas.Toggle;
@@ -124,6 +132,9 @@ public class NavigationManager : MonoBehaviour {
         ToggleableCanvas.OnRequestSelectButton += SelectButton;
         ToggleableCanvas.OnRequestCloseAllCanvases += CloseAllCanvases;
         ToggleableCanvas.OnDisabledCanvas += HandleCanvasDisabled;
+        // Audio
+        ButtonFeedbackRelay.OnUIButtonPressed += buttonPressedSfx.PlayAudioClip;
+        ButtonFeedbackRelay.OnUIButtonSelected += buttonSelectedSfx.PlayAudioClip;
     }
 
     private void OnDisable() {
@@ -133,5 +144,8 @@ public class NavigationManager : MonoBehaviour {
         ToggleableCanvas.OnRequestSelectButton -= SelectButton;
         ToggleableCanvas.OnRequestCloseAllCanvases -= CloseAllCanvases;
         ToggleableCanvas.OnDisabledCanvas -= HandleCanvasDisabled;
+        // Audio
+        ButtonFeedbackRelay.OnUIButtonPressed -= buttonPressedSfx.PlayAudioClip;
+        ButtonFeedbackRelay.OnUIButtonSelected -= buttonSelectedSfx.PlayAudioClip;
     }
 }

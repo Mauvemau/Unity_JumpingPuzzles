@@ -339,7 +339,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationSmoothness: 10
   rotationStrength: 0.1
-  _isJumping: 0
+  decaySpeed: 3
+  footstepSfx: {fileID: 11400000, guid: da6752f46f1f9a961baf1f7505cf2627, type: 2}
+  jumpingSfx: {fileID: 11400000, guid: 1659f8afa16c11dfbaf0908d2ac3011c, type: 2}
+  landingSfx: {fileID: 11400000, guid: d5c3d10bf41e9cae4a49bdfda68cf916, type: 2}
+  footstepSfxVelocityOffset: 0.5
 --- !u!4 &2201223469881150438 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0e61998a0600745419ee3ff32c3ca76c, type: 3}
