@@ -1,4 +1,56 @@
+using System.Collections.Generic;
 using UnityEngine;
+
+/// <summary>
+/// A buffer that stores a string defining an action and a timestamp.
+/// </summary>
+public class TimedActionBuffer : BufferContainer<float, string> {
+    private float _maxLifeTime = 20f;
+    public float MaxLifetime {
+        get => _maxLifeTime;
+        set {
+            _maxLifeTime = value;
+            if (_maxLifeTime <= 0f)
+                Debug.LogWarning("Buffer life time should be greater than 0");
+        }
+    }
+
+    /// <summary>
+    /// Removes entries older than maxLifeTime
+    /// </summary>
+    private void CleanupOldEntries() {
+        var currentTime = Time.time;
+        List<float> keysToRemove = new();
+        foreach (var (timestamp, _) in buffer) {
+            if (currentTime - timestamp > MaxLifetime) {
+                keysToRemove.Add(timestamp);
+            }
+        }
+
+        foreach (var key in keysToRemove) {
+            buffer.Remove(key);
+        }
+    }
+    
+    public void AddAction(string actionName) {
+        buffer.TryAdd(Time.time, actionName);
+        CleanupOldEntries();
+    }
+    
+    /// <summary>
+    /// Returns true if the action occurred within a given time window
+    /// </summary>
+    public bool HasActionBeenExecuted(string targetAction, float timeWindow) {
+        var currentTime = Time.time;
+        foreach (var (timestamp, action) in buffer) {
+            if (currentTime - timestamp <= timeWindow && action == targetAction) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
 
 public interface ICharacterController {
     /// <summary>
@@ -50,6 +102,8 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController {
     [Tooltip("Allows the player to fly... sort of")]
     [SerializeField] private bool infiniteJump = false;
 
+    private readonly TimedActionBuffer _actionBuffer = new TimedActionBuffer();
+    
     public void ToggleInfiniteJump() {
         infiniteJump = !infiniteJump;
     }
@@ -66,7 +120,10 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController {
         _character.RequestContinuousForce(request);
     }
 
-    public void OnJump() {
+    /// <summary>
+    /// For separating the buffering from player input and jump buffer logic.
+    /// </summary>
+    private void HandleJump() {
         if (!_character) return;
         if (!_character.feet.IsGrounded() && !infiniteJump) return;
         var request = new ForceRequest();
@@ -77,6 +134,14 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController {
         _character.RequestInstantForce(request);
         _character.RequestStartVerticalImpulse(holdJumpForce);
     }
+    
+    /// <summary>
+    /// Called only from outside
+    /// </summary>
+    public void OnJump() {
+        _actionBuffer.AddAction("Jump");
+        HandleJump();
+    }
 
     public void OnCancelJump() {
         _character.RequestStopVerticalImpulse();
@@ -84,8 +149,8 @@ public class PlayerCharacterController : MonoBehaviour, ICharacterController {
 
     private void FixedUpdate() {
         if (!_character) return;
-        if (_character.feet.IsGrounded() && ActionBuffer.HasActionBeenExecuted("Jump", earlyJumpWindow)) {
-            OnJump();
+        if (_character.feet.IsGrounded() && _actionBuffer.HasActionBeenExecuted("Jump", earlyJumpWindow)) {
+            HandleJump();
             OnCancelJump(); // Cancel hold jump immediately
         }
 

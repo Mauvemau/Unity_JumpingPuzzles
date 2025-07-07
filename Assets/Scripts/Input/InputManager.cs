@@ -1,35 +1,11 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-/// <summary>
-/// Stores actions performed by the player in a buffer
-/// self;TODO: Would be nice if there was an abstract buffer class instead of this static.
-/// </summary>
-public static class ActionBuffer {
-    private static readonly Dictionary<float, string> Buffer = new();
-
-    public static void Add(string action) {
-        Buffer.TryAdd(Time.time, action);
-    }
-
-    public static bool HasActionBeenExecuted(string targetAction, float timeWindow) {
-        var currentTime = Time.time;
-        foreach (var (actionTime, action) in Buffer) {
-            if (currentTime - actionTime <= timeWindow && action == targetAction) {
-                return true;
-            }
-        }
-        return false;
-    }
-}
 
 /// <summary>
 /// Handles input for entities controlled by the player
 /// </summary>
 public class InputManager : MonoBehaviour {
-    //[Header("References")]
     private ICharacterController _playerControllerReference; 
     private ICameraController _cameraControllerReference;
     private IGameManager _gameManagerReference;
@@ -128,7 +104,6 @@ public class InputManager : MonoBehaviour {
     private void HandleJumpInput(InputAction.CallbackContext ctx) {
         if (!ShouldReadGameplayRelatedInput()) return;
         if (ctx.started) {
-            ActionBuffer.Add(ctx.action.name); // [!] We buffer exclusively the start inputs
             _playerControllerReference?.OnJump();
         }
         else {
