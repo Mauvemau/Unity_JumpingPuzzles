@@ -1,3 +1,5 @@
+[![HeaderImage](https://imgur.com/i7OoPdO)]
+
 A 3D platforming game made in Unity 6.0.42f1
 
 To play the game on editor you must open the boot scene called "Boot"!
@@ -12,5 +14,13 @@ Controls:
 - F3 or Left shoulder button to cheat game speed.
 
 Credits:
-Game by Mauvemau.
-Kitchen assets by Tiny Treats.
+- Game by Mauvemau.
+- Kitchen assets by Tiny Treats.
+- Cheese model by Skfod_.
+- Animations and player model by Adobe Mixamo.
+- UI buttons by Vektyr.
+- UI sfx by Cyrex Studios.
+- Footstep sfx by MGW Sound Design.
+- Jumping sfx by nebula audio.
+- Consola font by Wojciech Kalinowski.
+- Music by Pizza Doggy.
