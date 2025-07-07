@@ -1,9 +1,10 @@
-[![HeaderImage](https://i.imgur.com/i7OoPdO.png)]
-A 3D platforming game made in Unity 6.0.42f1
+<img src="https://i.imgur.com/i7OoPdO.png" alt="HeaderImage" width="250"/>
 
-To play the game on editor you must open the boot scene called "Boot"!
+## A 3D platforming game made in Unity 6.0.42f1
 
-Controls:
+#### **To play the game on editor you must open the boot scene called "Boot"!**
+
+### Controls:
 - WASD or Left Stick to move.
 - Spacebar or A to jump.
 - ESC or Start to pause.
@@ -12,7 +13,7 @@ Controls:
 - F2 or Left thumbstick button to cheat infinite jump.
 - F3 or Left shoulder button to cheat game speed.
 
-Credits:
+### Credits:
 - Game by Mauvemau.
 - Kitchen assets by Tiny Treats.
 - Cheese model by Skfod_.
