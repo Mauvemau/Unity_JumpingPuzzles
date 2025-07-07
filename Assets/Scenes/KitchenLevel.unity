@@ -7381,6 +7381,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fa2c640ef237fb591b9df07bd4c866f5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1537895031}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fa2c640ef237fb591b9df07bd4c866f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1537895036}
   m_SourcePrefab: {fileID: 100100000, guid: fa2c640ef237fb591b9df07bd4c866f5, type: 3}
 --- !u!4 &1537895029 stripped
 Transform:
@@ -7461,6 +7464,23 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -4870051828174517235, guid: fa2c640ef237fb591b9df07bd4c866f5, type: 3}
+--- !u!114 &1537895036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537895030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 297120ea34161440c856113c2b50c9c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collisionFilter:
+    serializedVersion: 2
+    m_Bits: 64
+  textToDisplay: {fileID: 11400000, guid: f41cd33522325b1c58a2e6cf421d4e05, type: 2}
+  textPromptPanelEventChannel: {fileID: 11400000, guid: 838c1a4563fad9ffc8be50acdcaf82bf, type: 2}
 --- !u!1001 &1548104155
 PrefabInstance:
   m_ObjectHideFlags: 0
