@@ -27,11 +27,16 @@ public class GameManager : MonoBehaviour, IGameManager {
     [SerializeField] private VoidEventChannel requestExitApplicationChannel;
     [SerializeField] private BoolEventChannel requestPauseGame;
 
-    [Header("Event Invokers")]
+    [Header("Event Invokers")] 
+    [SerializeField] private BoolEventChannel requestToggleHud;
     [SerializeField] private BoolEventChannel requestTogglePauseMenuChannel;
     
     // Event Actions
     public static event Action OnGameStarted = delegate {};
+    /// <summary>
+    /// Some classes might need to init before others
+    /// </summary>
+    public static event Action OnPreGameStarted = delegate {};
     public static event Action<bool> OnGamePaused = delegate {};
     
     private GameObject _playerInstance;
@@ -42,6 +47,7 @@ public class GameManager : MonoBehaviour, IGameManager {
     public void SetGamePaused(bool paused) {
         _gamePaused = paused;
         _playerInstance.SetActive(!paused);
+        requestToggleHud.RaiseEvent(!paused);
         if(requestTogglePauseMenuChannel)
             requestTogglePauseMenuChannel.RaiseEvent(paused);
         OnGamePaused?.Invoke(paused);
@@ -78,13 +84,16 @@ public class GameManager : MonoBehaviour, IGameManager {
         _gamePaused = false;
         
         _playerInstance.SetActive(true);
+        OnPreGameStarted?.Invoke();
         OnGameStarted?.Invoke();
         
         _gameInitialized = true;
+        requestToggleHud.RaiseEvent(true);
     }
 
     [ContextMenu("Force End Game")]
     private void EndGame() {
+        requestToggleHud.RaiseEvent(false);
         _gameInitialized = false;
         _gamePaused = false;
         _currentPlayerSpawnPosition = !defaultPlayerSpawnPosition ? Vector3.zero : defaultPlayerSpawnPosition.position;

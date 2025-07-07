@@ -16,7 +16,7 @@ public class GameObjectTogglerPlatform : CollisionInteractable {
             }
         }
 
-        if (objectsToEnable.Count <= 0) return; // Damn Rider is really obsessed with inverted ifs
+        if (objectsToEnable.Count <= 0) return;
         foreach (var obj in objectsToEnable) {
             obj.SetActive(true);
         }

@@ -2,7 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CollectibleManager : MonoBehaviour {
+public interface ICollectibleManager {
+    public void OnCollectibleCollected(CollectibleType type);
+    public void OnCollectibleSpawned(CollectibleType type);
+}
+
+public class CollectibleManager : MonoBehaviour, ICollectibleManager {
     [Header("Event Invokers")] 
     [SerializeField]
     private StringEventChannel collectiblesTextUpdateChannel;
@@ -22,7 +27,7 @@ public class CollectibleManager : MonoBehaviour {
         AddMaxCollectible(type);
     }
 
-    public void Clear() {
+    private void Clear() {
         _maxCollectibles.Clear();
         _collectedCollectibles.Clear();
         RefreshDictionaries();
@@ -42,7 +47,7 @@ public class CollectibleManager : MonoBehaviour {
             var maxCount = _maxCollectibles[type];
             var collectedCount = _collectedCollectibles.GetValueOrDefault(type, 0);
             var progress = maxCount > 0 ? (float)collectedCount / maxCount : 0f;
-            if (type == CollectibleType.MainObjective && progress >= 1f) { // Scuffed, will fix later
+            if (type == CollectibleType.MainObjective && progress >= 1f) {
                 HandleVictory();
             }
             progressOutput += $"{type}: {collectedCount}/{maxCount} ({progress * 100:F2}%)\n";
@@ -79,7 +84,19 @@ public class CollectibleManager : MonoBehaviour {
     }
     
     private void Awake() {
-        ServiceLocator.SetService(this);
+        ServiceLocator.SetService<ICollectibleManager>(this);
         RefreshDictionaries();
+    }
+
+    private void OnGameStarted() {
+        Clear();
+    }
+    
+    private void OnEnable() {
+        GameManager.OnPreGameStarted += OnGameStarted;
+    }
+    
+    private void OnDisable() {
+        GameManager.OnPreGameStarted -= OnGameStarted;
     }
 }

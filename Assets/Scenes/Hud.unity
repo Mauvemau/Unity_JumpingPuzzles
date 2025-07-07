@@ -465,6 +465,7 @@ GameObject:
   - component: {fileID: 643295909}
   - component: {fileID: 643295908}
   - component: {fileID: 643295913}
+  - component: {fileID: 643295914}
   m_Layer: 5
   m_Name: HudCanvas
   m_TagString: Untagged
@@ -563,6 +564,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 643295907}
   m_CullTransparentMesh: 1
+--- !u!114 &643295914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 643295907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edcda30f5af426c4f9e398483cf9a66d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activeOnAwake: 0
+  toggleCanvasChannel: {fileID: 11400000, guid: 95f345406c7eb4c44a63262b093140ee, type: 2}
 --- !u!1 &1062296951
 GameObject:
   m_ObjectHideFlags: 0
