@@ -5,13 +5,11 @@ using UnityEngine;
 /// </summary>
 public class UIButtonContainerToggle : MonoBehaviour {
     [Header("Config")]
-    [SerializeField]
     [Tooltip("Defines if the container is meant to be enabled or disabled by default")]
-    private bool activeOnAwake = true;
+    [SerializeField] private bool activeOnAwake = true;
 
     [Header("EventListeners")] 
-    [SerializeField]
-    private BoolEventChannel toggleContainerChannel;
+    [SerializeField] private BoolEventChannel toggleContainerChannel;
 
     private GameObject[] _children;
     

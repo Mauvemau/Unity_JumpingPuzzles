@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 /// <summary>
@@ -16,18 +15,19 @@ public class ForceRequest {
 [RequireComponent(typeof(Rigidbody))]
 public class Character : MonoBehaviour {
     [Header("Rigidbody Config")]
-    [SerializeField]
     [Tooltip("Defines a maximum speed for the rigidbody")]
-    private float maxRbSpeed = 0f;
+    [SerializeField] private float maxRbSpeed = 0f;
+    
     [Header("Foot Config")]
     [Tooltip("Used for logic that requires knowing if the character is grounded")]
     public CharacterFoot feet;
-    [SerializeField]
     [Tooltip("Defines the maximum angle in which the player can walk up a slope")]
-    private float maxSlopeAngle = 45f; 
-    [SerializeField]
+    [SerializeField] private float maxSlopeAngle = 45f; 
     [Tooltip("Modifies how it begins to get hard to walk up a slope depending on the maximum angle")]
-    private float slopeEffortCurveMultiplier = 3f;
+    [SerializeField] private float slopeEffortCurveMultiplier = 3f;
+    
+    [Header("Feedback Config")]
+    [SerializeField] protected CharacterAnimationController animationController;
 
     protected Rigidbody Rb;
     
@@ -60,13 +60,12 @@ public class Character : MonoBehaviour {
     /// Clamps the maximum speed of the rigidbody
     /// </summary>
     protected void EvilSpeedLimiter() {
-        if(maxRbSpeed > 0) {
-            Vector3 clampedVelocity = Rb.linearVelocity;
-            clampedVelocity.x = Mathf.Clamp(clampedVelocity.x, -maxRbSpeed, maxRbSpeed);
-            clampedVelocity.z = Mathf.Clamp(clampedVelocity.z, -maxRbSpeed, maxRbSpeed);
+        if (!(maxRbSpeed > 0)) return;
+        var clampedVelocity = Rb.linearVelocity;
+        clampedVelocity.x = Mathf.Clamp(clampedVelocity.x, -maxRbSpeed, maxRbSpeed);
+        clampedVelocity.z = Mathf.Clamp(clampedVelocity.z, -maxRbSpeed, maxRbSpeed);
 
-            Rb.linearVelocity = clampedVelocity; // For your safety!
-        }
+        Rb.linearVelocity = clampedVelocity; // For your safety!
     }
 
     /// <summary>
@@ -108,6 +107,16 @@ public class Character : MonoBehaviour {
     protected static Vector3 ProjectSlope(Vector3 currentDirection, Vector3 groundNormal) {
         return Vector3.ProjectOnPlane(currentDirection, groundNormal).normalized;
     }
+
+    protected void HandleFeedback() {
+        if (ContinuousForceRequest == null || !animationController) return;
+
+        var linearVelocity = Rb.linearVelocity;
+        var horizontalVelocity = new Vector2(linearVelocity.x, linearVelocity.z);
+        var hasInput = ContinuousForceRequest.Direction.sqrMagnitude > 0f; // Anti-false positive
+
+        animationController.UpdateMeshDirection(horizontalVelocity, hasInput);
+    }
     
     private void HandleMovement() {
         if (ContinuousForceRequest == null) return;
@@ -141,12 +150,16 @@ public class Character : MonoBehaviour {
     private void FixedUpdate() {
         HandleMovement();
         HandleJumping();
+        HandleFeedback();
     }
 
     private void Awake() {
         Rb = GetComponent<Rigidbody>();
         if (!feet) {
             Debug.LogWarning($"{name}: Feet are not configured!");
+        }
+        if (!animationController) {
+            Debug.Log($"{name}: Animation controller not configured, verify if intended.");
         }
     }
 }

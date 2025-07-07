@@ -6,13 +6,11 @@ using UnityEngine;
 [RequireComponent(typeof(Canvas))]
 public class HudCanvasToggle : MonoBehaviour {
     [Header("Config")]
-    [SerializeField]
     [Tooltip("Defines if the canvas is meant to be enabled or disabled by default")]
-    private bool activeOnAwake = true;
+    [SerializeField] private bool activeOnAwake = true;
 
     [Header("EventListeners")] 
-    [SerializeField]
-    private BoolEventChannel toggleCanvasChannel;
+    [SerializeField] private BoolEventChannel toggleCanvasChannel;
     
     private Canvas _canvas;
 

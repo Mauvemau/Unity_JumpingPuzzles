@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public enum CollectibleType {
@@ -6,60 +5,63 @@ public enum CollectibleType {
     Bonus
 }
 
-[RequireComponent(typeof(Collider))]
-public class ObjectCollectible : MonoBehaviour
-{
+public class ObjectCollectible : CollisionInteractable {
     [Header("Config")]
     [SerializeField] private CollectibleType type = CollectibleType.MainObjective;
-    [SerializeField] private LayerMask playerLayer;
 
-    private CollectibleManager _collectibleManagerReference;
+    [Header("Sound Effects")] 
+    [SerializeField] private AudioClip2DContainer pickupSfx;
+    
+    private ICollectibleManager _collectibleManagerReference;
     private Collider _colliderReference;
+    private MeshRenderer _meshRendererReference;
     private bool _triggered = false; // Prevent from triggering more than once.
 
-    private void HandlePlayerTrigger() {
-        if (!_collectibleManagerReference) return;
+    private void HandleTriggerLogic() {
+        _collectibleManagerReference?.OnCollectibleCollected(type);
         
-        _collectibleManagerReference.OnCollectibleCollected(type);
-        gameObject.SetActive(false);
+        if (pickupSfx) {
+            pickupSfx.PlayAudioClip();
+        }
+        
+        if (_meshRendererReference) {
+            _meshRendererReference.enabled = false;
+        }
+        else {
+            Debug.LogWarning($"{name}: Doesn't have any mesh renderer!");
+        }
     }
+    
+    protected override void HandleCollision(GameObject other) {}
 
-    private void OnTriggerEnter(Collider collision) {
-        var other = collision.gameObject;
-        if (((1 << other.layer) & playerLayer) == 0) return;
+    protected override void HandleTrigger(GameObject other) {
         if (_triggered) return;
         _triggered = true;
-        HandlePlayerTrigger();
+        HandleTriggerLogic();
     }
 
     private void OnGameStarted() {
-        if (!ServiceLocator.TryGetService<CollectibleManager>(out var collectibleManager)) {
+        _meshRendererReference.enabled = true;
+        _triggered = false;
+        if (!ServiceLocator.TryGetService<ICollectibleManager>(out var collectibleManager)) {
             Debug.LogWarning($"{name}: Unable to find collectible manager in Service Locator!");
             return;
         }
         _collectibleManagerReference = collectibleManager;
-        _collectibleManagerReference.OnCollectibleSpawned(type);
+        _collectibleManagerReference?.OnCollectibleSpawned(type);
     }
     
     private void Awake() {
         _colliderReference = GetComponent<Collider>();
         _colliderReference.isTrigger = true;
-    }
-
-    private void OnValidate() {
-        if (playerLayer != 0) return;
-
-        var playerLayerIndex = LayerMask.NameToLayer("Player");
-        if (playerLayerIndex != -1) {
-            playerLayer = 1 << playerLayerIndex;
-        }
+        TryGetComponent(out _meshRendererReference);
     }
 
     private void OnEnable() {
-        GameManager.OnPlayerSpawned += OnGameStarted;
+        GameManager.OnGameStarted += OnGameStarted;
     }
 
     private void OnDisable() {
-        GameManager.OnPlayerSpawned -= OnGameStarted;
+        GameManager.OnGameStarted -= OnGameStarted;
     }
 }

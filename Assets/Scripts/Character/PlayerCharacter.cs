@@ -1,15 +1,22 @@
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerCharacterController))]
-public class PlayerCharacter : Character {
-    [Header("Anchoring Config")]
-    [SerializeField]
-    [Tooltip("Used for camera-based movement and animations")]
-    private MainCamera cameraReference;
-
+public interface IPlayableCharacter {
+    Transform Transform { get; }
     /// <summary>
     /// Allows the camera to assign a reference to itself to the player
     /// </summary>
+    public void AssignCameraReference(MainCamera receivedCameraReference);
+    public void RequestSetPosition(Vector3 position);
+}
+
+[RequireComponent(typeof(PlayerCharacterController))]
+public class PlayerCharacter : Character, IPlayableCharacter {
+    [Header("Anchoring Config")]
+    [Tooltip("Used for camera-based movement and animations")]
+    [SerializeField] private MainCamera cameraReference;
+    
+    public Transform Transform => transform;
+    
     public void AssignCameraReference(MainCamera receivedCameraReference) {
         cameraReference = receivedCameraReference;
     }
@@ -27,7 +34,7 @@ public class PlayerCharacter : Character {
         return (camRight * ContinuousForceRequest.Direction.x) +
                (camForward * ContinuousForceRequest.Direction.z);
     }
-
+    
     private void HandleJumping() {
         if (ContinuousForceRequest == null) return;
         Rb.AddForce(Vector3.up * VerticalForceRequest, ForceMode.Force);
@@ -60,6 +67,7 @@ public class PlayerCharacter : Character {
     private void FixedUpdate() {
         HandleMovement();
         HandleJumping();
+        HandleFeedback();
     }
     
 }

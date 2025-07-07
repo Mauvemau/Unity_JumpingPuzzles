@@ -1,44 +1,109 @@
+using System.Collections.Generic;
 using UnityEngine;
+
+/// <summary>
+/// A buffer that stores a string defining an action and a timestamp.
+/// </summary>
+public class TimedActionBuffer : BufferContainer<float, string> {
+    private float _maxLifeTime = 20f;
+    public float MaxLifetime {
+        get => _maxLifeTime;
+        set {
+            _maxLifeTime = value;
+            if (_maxLifeTime <= 0f)
+                Debug.LogWarning("Buffer life time should be greater than 0");
+        }
+    }
+
+    /// <summary>
+    /// Removes entries older than maxLifeTime
+    /// </summary>
+    private void CleanupOldEntries() {
+        var currentTime = Time.time;
+        List<float> keysToRemove = new();
+        foreach (var (timestamp, _) in buffer) {
+            if (currentTime - timestamp > MaxLifetime) {
+                keysToRemove.Add(timestamp);
+            }
+        }
+
+        foreach (var key in keysToRemove) {
+            buffer.Remove(key);
+        }
+    }
+    
+    public void AddAction(string actionName) {
+        buffer.TryAdd(Time.time, actionName);
+        CleanupOldEntries();
+    }
+    
+    /// <summary>
+    /// Returns true if the action occurred within a given time window
+    /// </summary>
+    public bool HasActionBeenExecuted(string targetAction, float timeWindow) {
+        var currentTime = Time.time;
+        foreach (var (timestamp, action) in buffer) {
+            if (currentTime - timestamp <= timeWindow && action == targetAction) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+public interface ICharacterController {
+    /// <summary>
+    /// Debug function, toggles between infinite jump mode and normal mode.
+    /// </summary>
+    public void ToggleInfiniteJump();
+    /// <summary>
+    /// Moves a character
+    /// </summary>
+    public void OnMove(Vector2 horizontalInput);
+    /// <summary>
+    /// Makes a character jump
+    /// </summary>
+    public void OnJump();
+    /// <summary>
+    /// Cancels a character's jump
+    /// </summary>
+    public void OnCancelJump();
+}
 
 /// <summary>
 /// Decides actions taken by the player based on input received.
 /// </summary>
 [RequireComponent(typeof(Character))]
-public class PlayerCharacterController : MonoBehaviour {
+public class PlayerCharacterController : MonoBehaviour, ICharacterController {
     private Character _character;
     [Header("Movement")]
-    [SerializeField]
     [Min(0)]
-    private float speed = 25f;
-    [SerializeField]
+    [SerializeField] private float speed = 25f;
     [Min(0)]
-    private float force = 30f;
-    [SerializeField]
+    [SerializeField] private float force = 30f;
     [Min(0)]
     [Tooltip("Multiplies the amount of force applied to the character when airborne")]
-    private float airControlFactor = .8f;
+    [SerializeField] private float airControlFactor = .8f;
     [Header("Jump")]
     [Min(0)]
-    [SerializeField]
-    private float jumpForce = 5f;
+    [SerializeField] private float jumpForce = 5f;
     [Min(0)]
-    [SerializeField]
     [Tooltip("Vertical continuous force applied to the character when holding jump")]
-    private float holdJumpForce = 10f;
+    [SerializeField] private float holdJumpForce = 10f;
     [Min(0)]
-    [SerializeField]
     [Tooltip("Amount of time the player is allowed to holdJump")]
-    private float holdJumpTime = .35f;
-    [SerializeField]
+    [SerializeField] private float holdJumpTime = .35f;
     [Min(0)]
     [Tooltip("Defines the time window in which a jump input will be accepted if it's pressed before the character has landed")]
-    private float earlyJumpWindow = .2f;
+    [SerializeField] private float earlyJumpWindow = .2f;
 
     [Header("Debug")]
-    [SerializeField]
     [Tooltip("Allows the player to fly... sort of")]
-    private bool infiniteJump = false;
+    [SerializeField] private bool infiniteJump = false;
 
+    private readonly TimedActionBuffer _actionBuffer = new TimedActionBuffer();
+    
     public void ToggleInfiniteJump() {
         infiniteJump = !infiniteJump;
     }
@@ -55,7 +120,10 @@ public class PlayerCharacterController : MonoBehaviour {
         _character.RequestContinuousForce(request);
     }
 
-    public void OnJump() {
+    /// <summary>
+    /// For separating the buffering from player input and jump buffer logic.
+    /// </summary>
+    private void HandleJump() {
         if (!_character) return;
         if (!_character.feet.IsGrounded() && !infiniteJump) return;
         var request = new ForceRequest();
@@ -66,6 +134,14 @@ public class PlayerCharacterController : MonoBehaviour {
         _character.RequestInstantForce(request);
         _character.RequestStartVerticalImpulse(holdJumpForce);
     }
+    
+    /// <summary>
+    /// Called only from outside
+    /// </summary>
+    public void OnJump() {
+        _actionBuffer.AddAction("Jump");
+        HandleJump();
+    }
 
     public void OnCancelJump() {
         _character.RequestStopVerticalImpulse();
@@ -73,8 +149,8 @@ public class PlayerCharacterController : MonoBehaviour {
 
     private void FixedUpdate() {
         if (!_character) return;
-        if (_character.feet.IsGrounded() && ActionBuffer.HasActionBeenExecuted("Jump", earlyJumpWindow)) {
-            OnJump();
+        if (_character.feet.IsGrounded() && _actionBuffer.HasActionBeenExecuted("Jump", earlyJumpWindow)) {
+            HandleJump();
             OnCancelJump(); // Cancel hold jump immediately
         }
 

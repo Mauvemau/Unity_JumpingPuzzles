@@ -1,45 +1,41 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// Controls the behaviour of the camera and it's position
 /// </summary>
 public class MainCamera : MonoBehaviour {
-    [SerializeField] 
-    private Transform target;
-    [Header("Position")]
-    [SerializeField]
-    private Vector3 offset;
-    [Header("Sensitivity")]
-    [SerializeField]
+    [Tooltip("Target followed by the camera")]
+    [SerializeField] private Transform target;
+    [Header("Rotation")]
     [Min(0)]
-    private float horizontalSpeed = 1f;
-    [SerializeField]
+    [SerializeField] private float horizontalSpeed = 1f;
     [Min(0)]
-    private float verticalSpeed = 1f;
-    [SerializeField]
+    [SerializeField] private float verticalSpeed = 1f;
+    [Tooltip("Angle in which the camera stops rotating vertically")]
+    [SerializeField] private float minClampAngle = -80f;
+    [Tooltip("Angle in which the camera stops rotating vertically")]
+    [SerializeField] private float maxClampAngle = 80f;
+    [Header("Collision")]
+    [Tooltip("The layer the camera will collide with")]
+    [SerializeField] private LayerMask collisionLayer;
+    [Tooltip("The size of the sphere collision around the camera")]
+    [SerializeField] private float collisionRadius = .3f;
     [Min(0)]
-    private float rotationSmoothness = 0.1f;
-    [Header("Configuration")]
-    [SerializeField]
-    private float minClampAngle = -70f;
-    [SerializeField]
-    private float maxClampAngle = 80f;
-    [SerializeField]
-    public LayerMask collisionLayer;
-    [SerializeField]
+    [Tooltip("How close to the target the camera can get")]
+    [SerializeField] private float minDistance = 1f;
     [Min(0)]
-    private float minDistance = 1f;
-    [SerializeField]
-    [Min(0)]
-    private float maxDistance = 7f;
+    [Tooltip("How far from the target the camera can get")]
+    [SerializeField] private float maxDistance = 7f;
+
+    private Vector2 _mouseInput;
+    private Vector2 _analogInput;
+    private float _currentDistance;
+    private float _pitch = 0;
+    private float _yaw = 0;
 
     private Vector3 _defaultPosition;
     private Quaternion _defaultRotation;
-    private Vector2 _requestedRotationVelocity;
-    private Vector2 _smoothedRotation; // We declare these here so that we don't do it in every late update loop
-    private float _pitch = 0;
-    private float _yaw = 0;
-    
+
     public Vector3 GetCameraForward() {
         return transform.forward;
     }
@@ -47,65 +43,71 @@ public class MainCamera : MonoBehaviour {
     public Vector3 GetCameraRight() {
         return transform.right;
     }
-    
-    public void RequestRotation(Vector2 rotationDirection) {
-        _requestedRotationVelocity = rotationDirection;
+
+    public void RequestMouseRotation(Vector2 delta) {
+        _mouseInput += delta;
+    }
+
+    public void RequestAnalogRotation(Vector2 input) {
+        _analogInput = input;
     }
 
     private void OnPlayerSpawned() {
-        if (!ServiceLocator.TryGetService<PlayerCharacter>(out var player)) return;
-        target = player.transform;
-        player.AssignCameraReference(this);
+        if (!ServiceLocator.TryGetService<IPlayableCharacter>(out var player)) return;
+        target = player.Transform;
+        player?.AssignCameraReference(this);
     }
 
     private Vector3 HandleCameraCollision(Vector3 desiredPosition) {
         var direction = (desiredPosition - target.position).normalized;
+        var maxCheckDistance = Vector3.Distance(target.position, desiredPosition);
 
-        if (Physics.Raycast(target.position, direction, out var hit, maxDistance, collisionLayer)) {
-            var distance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
-            return target.position + direction * distance;
-        }
+        if (!Physics.SphereCast(target.position, collisionRadius, direction, out var hit, maxCheckDistance, collisionLayer)) 
+            return desiredPosition;
         
-        return desiredPosition; // If no collision is detected we just return it as it is.
+        var clampedDistance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
+        return target.position + direction * clampedDistance;
     }
 
-    private Vector3 HandleCameraMovement() {
-        _smoothedRotation = Vector2.Lerp(_smoothedRotation, _requestedRotationVelocity, rotationSmoothness);
+    private void HandleCameraRotation() {
+        var analogDelta = _analogInput * Time.deltaTime;
 
-        _yaw += _smoothedRotation.x * horizontalSpeed * Time.deltaTime;
-        _pitch -= _smoothedRotation.y * verticalSpeed * Time.deltaTime;
+        _yaw += (_mouseInput.x * horizontalSpeed) + (analogDelta.x * horizontalSpeed);
+        _pitch -= (_mouseInput.y * verticalSpeed) + (analogDelta.y * verticalSpeed);
         _pitch = Mathf.Clamp(_pitch, minClampAngle, maxClampAngle);
 
-        var desiredRotation = Quaternion.Euler(_pitch, _yaw, 0);
-        return target.position + desiredRotation * offset;
+        _mouseInput = Vector2.zero;
+
+        var distance = Mathf.Clamp(_currentDistance, minDistance, maxDistance);
+        var rotation = Quaternion.Euler(_pitch, _yaw, 0f);
+        var offset = rotation * new Vector3(0f, 0f, -distance);
+        var desiredPosition = target.position + offset;
+
+        transform.position = HandleCameraCollision(desiredPosition);
+        transform.LookAt(target);
     }
 
     private void HandleIdleLogic() {
         transform.position = _defaultPosition;
         transform.rotation = _defaultRotation;
     }
-    
+
     private void LateUpdate() {
         if (!target) return;
-        if (!target.gameObject.activeInHierarchy) {
+        if (!target.gameObject.activeInHierarchy)
+        {
             HandleIdleLogic();
             return;
         }
 
-        var desiredPosition = HandleCameraMovement();
-
-        var finalPosition = HandleCameraCollision(desiredPosition);
-
-        transform.position = finalPosition;
-        transform.LookAt(target);
+        HandleCameraRotation();
     }
 
     private void Awake() {
         _defaultPosition = transform.position;
         _defaultRotation = transform.rotation;
-        if (!target) {
-            Debug.Log($"{name}: The camera doesn't currently have a {nameof(target)}, verify if intended.");
-        }
+        _currentDistance = maxDistance;
+        
         if (collisionLayer.value == 0) {
             Debug.Log($"{name}: {nameof(collisionLayer)} is not configured, verify if intended.");
         }
@@ -118,10 +120,10 @@ public class MainCamera : MonoBehaviour {
     }
 
     private void OnEnable() {
-        GameManager.OnPlayerSpawned += OnPlayerSpawned;
+        GameManager.OnGameStarted += OnPlayerSpawned;
     }
 
     private void OnDisable() {
-        GameManager.OnPlayerSpawned -= OnPlayerSpawned;
+        GameManager.OnGameStarted -= OnPlayerSpawned;
     }
 }

@@ -1,41 +1,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameObjectTogglerPlatform : MonoBehaviour {
+/// <summary>
+/// A platform that enables or/and disables objects on collision
+/// </summary>
+public class GameObjectTogglerPlatform : CollisionInteractable {
     [Header("References")]
-    [SerializeField] 
-    private List<GameObject> objectsToEnable;
-    [SerializeField]
-    private List<GameObject> objectsToDisable;
-    
-    [Header("Config")]
-    [SerializeField] 
-    private LayerMask playerLayer;
-    
-    private void HandlePlayerCollision() {
+    [SerializeField] private List<GameObject> objectsToEnable;
+    [SerializeField] private List<GameObject> objectsToDisable;
+
+    protected override void HandleCollision(GameObject other) {
         if (objectsToDisable.Count > 0) {
             foreach (var obj in objectsToDisable) {
+                if (!obj) {
+                    Debug.LogWarning($"{name}: Trying to disable null object!");
+                    continue;
+                }
                 obj.SetActive(false);
             }
         }
 
-        if (objectsToEnable.Count <= 0) return; // Damn Rider is really obsessed with inverted ifs
+        if (objectsToEnable.Count <= 0) return;
         foreach (var obj in objectsToEnable) {
+            if (!obj) {
+                Debug.LogWarning($"{name}: Trying to enable null object!");
+                continue;
+            }
             obj.SetActive(true);
         }
     }
-    
-    private void OnCollisionEnter(Collision collision) {
-        var other = collision.gameObject;
-        if (((1 << other.layer) & playerLayer) == 0) return;
-        HandlePlayerCollision();
-    }
 
-    private void OnValidate() {
-        if (playerLayer != 0) return;
-        var playerLayerIndex = LayerMask.NameToLayer("Player");
-        if (playerLayerIndex != -1) {
-            playerLayer = 1 << playerLayerIndex;
-        }
-    }
+    protected override void HandleTrigger(GameObject other) { }
 }

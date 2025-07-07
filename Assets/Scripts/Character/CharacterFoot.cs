@@ -2,38 +2,33 @@ using UnityEngine;
 
 public class CharacterFoot : MonoBehaviour {
     [Header("Ground Settings")]
-    [SerializeField]
     [Tooltip("Everything outside of this layer will be ignored by the feet's logic")]
-    private LayerMask groundLayer;
-    [SerializeField]
+    [SerializeField] private LayerMask groundLayer;
     [Min(0)]
     [Tooltip("Defines the distance in which the foot detects the ground")]
-    private float groundCheckDistance = 1f;
-    [SerializeField] 
+    [SerializeField] private float groundCheckDistance = 1f;
     [Tooltip("Defines distance of the front foot towards the pivot")]
-    private float frontFootOffset = .2f;
-    [SerializeField] 
+    [SerializeField] private float frontFootOffset = .2f;
     [Tooltip("Amount of extra raycasts casted for a more accurate ground reading")]
-    private int amountExtraRaycast = 10;
-    [SerializeField] 
+    [SerializeField] private int amountExtraRaycast = 10;
     [Tooltip("Distance around the player where extra raycasts will be cast")]
-    private float extraRaycastRadius = .5f;
-    
+    [SerializeField] private float extraRaycastRadius = .5f;
     
     [Header("Jump Settings")] 
-    [SerializeField]
     [Min(0)]
     [Tooltip("Defines how long until the character is allowed to jump again after jumping")]
-    private float jumpCooldown = .2f;
+    [SerializeField] private float jumpCooldown = .2f;
     private float _jumpTimestamp;
     private bool _jumping = false;
 
     [Header("Coyote Time Settings")] 
-    [SerializeField]
     [Min(0)]
     [Tooltip("Defines a time window in which the foot will still consider itself as grounded after falling off a platform")]
-    private float coyoteTime = .5f;
+    [SerializeField] private float coyoteTime = .5f;
     private float _lastGroundedTime;
+    
+    [Header("Feedback Config")]
+    [SerializeField] protected CharacterAnimationController animationController;
 
     /// <summary>
     /// Casts rays in a circular pattern around the player to check for ground contact.
@@ -104,6 +99,14 @@ public class CharacterFoot : MonoBehaviour {
         _jumpTimestamp = Time.time;
     }
     
+    /// <summary>
+    /// Used for handling feedback triggers like animations, sound, or effects
+    /// </summary>
+    private void HandleFeedback() {
+        if (!animationController) return;
+        animationController.UpdateIsJumping(!IsTouchingGround() || _jumping);
+    }
+    
     private void FixedUpdate() {
         var groundedNow = IsTouchingGround(); // If foot are grounded on this update tick
         
@@ -114,6 +117,7 @@ public class CharacterFoot : MonoBehaviour {
         if (_jumping && Time.time > _jumpTimestamp + jumpCooldown && groundedNow) { // ! Keep _jumping as first check
             _jumping = false;
         }
+        HandleFeedback();
     }
 
     private void Awake() {
@@ -125,6 +129,9 @@ public class CharacterFoot : MonoBehaviour {
         }
         if (groundCheckDistance <= 0) {
             Debug.LogWarning($"{name}: {groundCheckDistance} raycast size is set to zero.");
+        }
+        if (!animationController) {
+            Debug.Log($"{name}: Animation controller not configured, verify if intended.");
         }
     }
 }

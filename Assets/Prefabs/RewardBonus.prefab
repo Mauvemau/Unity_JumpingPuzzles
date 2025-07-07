@@ -73,6 +73,10 @@ PrefabInstance:
       value: RewardBonus
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ce35a0a54738197569a77b3a1000da67, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ce35a0a54738197569a77b3a1000da67, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -114,6 +118,7 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  pickupSfx: {fileID: 11400000, guid: 44b9a8e6c91c270f4938c4f786ba1421, type: 2}
 --- !u!114 &170909181465994990
 MonoBehaviour:
   m_ObjectHideFlags: 0
