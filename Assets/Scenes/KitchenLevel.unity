@@ -2326,11 +2326,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementNodes:
   - transform: {fileID: 1009759609}
-    haltTime: 3
+    haltTime: 6
   - transform: {fileID: 357724933}
     haltTime: 1
   - transform: {fileID: 1551265297}
-    haltTime: 3
+    haltTime: 2
   speed: 5
 --- !u!54 &482008629
 Rigidbody:
@@ -2448,7 +2448,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &511875635
 Transform:
   m_ObjectHideFlags: 0

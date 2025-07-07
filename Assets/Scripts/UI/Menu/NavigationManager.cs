@@ -56,15 +56,14 @@ public class NavigationManager : MonoBehaviour {
     [SerializeField] private AudioClip2DContainer buttonPressedSfx;
     [SerializeField] private AudioClip2DContainer buttonSelectedSfx;
     
-    private int _mainCanvasIndex = -1;
+    [HideInInspector]
+    [SerializeField] private int mainCanvasIndex = -1;
     private Button _currentFirstSelected;
     
     /// <summary>
     /// Lets the Input manager know when to lock/unlock mouse.
     /// </summary>
     public static event Action<bool> OnToggleUI = delegate {};
-    
-    private GameObject _lastSelected;
 
     private void HandleCanvasDisabled() {
         ToggleEventSystemInput(false);
@@ -113,25 +112,25 @@ public class NavigationManager : MonoBehaviour {
         }
         CloseAllCanvases();
         if (activeOnAwake) {
-            canvases[_mainCanvasIndex].Toggle(true);
+            canvases[mainCanvasIndex].Toggle(true);
         }
     }
     
     private void OnValidate() {
         if (!mainCanvas && canvases.Count > 0) {
             mainCanvas = canvases[0].Canvas;
-            _mainCanvasIndex = 0;
+            mainCanvasIndex = 0;
             return;
         }
 
         for (var i = 0; i < canvases.Count; i++) {
             if (canvases[i].Canvas != mainCanvas) continue;
-            _mainCanvasIndex = i;
+            mainCanvasIndex = i;
             return;
         }
 
         mainCanvas = null;
-        _mainCanvasIndex = -1;
+        mainCanvasIndex = -1;
         Debug.LogWarning($"{name}: Main canvas not found in the canvas list!");
     }
     
