@@ -156,7 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 25
   force: 30
-  airControlFactor: 1
+  airControlFactor: 1.1
   jumpForce: 5
   holdJumpForce: 10
   holdJumpTime: 0.5
