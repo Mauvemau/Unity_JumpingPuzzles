@@ -1,5 +1,4 @@
-[![HeaderImage](https://imgur.com/i7OoPdO)]
-
+[![HeaderImage](https://i.imgur.com/i7OoPdO.png)]
 A 3D platforming game made in Unity 6.0.42f1
 
 To play the game on editor you must open the boot scene called "Boot"!
