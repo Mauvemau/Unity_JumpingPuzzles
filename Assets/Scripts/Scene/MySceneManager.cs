@@ -104,7 +104,7 @@ public class MySceneManager : MonoBehaviour, ISceneManager {
 
     private void Awake() {
         DontDestroyOnLoad(gameObject);
-        ServiceLocator.SetService(this);
+        ServiceLocator.SetService<ISceneManager>(this);
     }
 
     private void Start() {

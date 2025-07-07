@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Windows;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 /// <summary>
 /// Controls the behaviour of the camera and it's position
@@ -55,9 +53,9 @@ public class MainCamera : MonoBehaviour {
     }
 
     private void OnPlayerSpawned() {
-        if (!ServiceLocator.TryGetService<PlayerCharacter>(out var player)) return;
-        target = player.transform;
-        player.AssignCameraReference(this);
+        if (!ServiceLocator.TryGetService<IPlayableCharacter>(out var player)) return;
+        target = player.Transform;
+        player?.AssignCameraReference(this);
     }
 
     private Vector3 HandleCameraCollision(Vector3 desiredPosition) {
@@ -119,7 +117,6 @@ public class MainCamera : MonoBehaviour {
         if (verticalSpeed == 0) {
             Debug.LogWarning($"{name}: {nameof(verticalSpeed)} is currently set to 0!");
         }
-        ServiceLocator.SetService(this);
     }
 
     private void OnEnable() {

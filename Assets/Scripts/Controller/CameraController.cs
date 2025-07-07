@@ -1,10 +1,14 @@
 using UnityEngine;
 
+public interface ICameraController {
+    public void OnLook(Vector2 directionInput, bool isMouseInput);
+}
+
 /// <summary>
 /// Decides actions performed by the camera based on input received
 /// </summary>
 [RequireComponent(typeof(MainCamera))]
-public class CameraController : MonoBehaviour {
+public class CameraController : MonoBehaviour, ICameraController {
     private MainCamera _camera;
     [Min(0)]
     [SerializeField] private float mouseSensitivity = .5f;
@@ -24,7 +28,7 @@ public class CameraController : MonoBehaviour {
     private void Awake() {
         if(TryGetComponent<MainCamera>(out var cameraComponent)) {
             _camera = cameraComponent;
-            ServiceLocator.SetService(this);
+            ServiceLocator.SetService<ICameraController>(this);
         }
         if(!_camera) {
             Debug.LogError($"{name}: {nameof(_camera)} is null!");

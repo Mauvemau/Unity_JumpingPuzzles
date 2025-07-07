@@ -1,10 +1,29 @@
 using UnityEngine;
 
+public interface ICharacterController {
+    /// <summary>
+    /// Debug function, toggles between infinite jump mode and normal mode.
+    /// </summary>
+    public void ToggleInfiniteJump();
+    /// <summary>
+    /// Moves a character
+    /// </summary>
+    public void OnMove(Vector2 horizontalInput);
+    /// <summary>
+    /// Makes a character jump
+    /// </summary>
+    public void OnJump();
+    /// <summary>
+    /// Cancels a character's jump
+    /// </summary>
+    public void OnCancelJump();
+}
+
 /// <summary>
 /// Decides actions taken by the player based on input received.
 /// </summary>
 [RequireComponent(typeof(Character))]
-public class PlayerCharacterController : MonoBehaviour {
+public class PlayerCharacterController : MonoBehaviour, ICharacterController {
     private Character _character;
     [Header("Movement")]
     [Min(0)]

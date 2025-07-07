@@ -29,10 +29,10 @@ public static class ActionBuffer {
 /// Handles input for entities controlled by the player
 /// </summary>
 public class InputManager : MonoBehaviour {
-    [Header("References")]
-    [SerializeField] private PlayerCharacterController playerControllerReference;
-    [SerializeField] private CameraController cameraControllerReference;
-    [SerializeField] private GameManager gameManagerReference;
+    //[Header("References")]
+    private ICharacterController _playerControllerReference; 
+    private ICameraController _cameraControllerReference;
+    private IGameManager _gameManagerReference;
     
     [Header("Player Actions")]
     [SerializeField] private InputActionReference moveAction;
@@ -62,25 +62,25 @@ public class InputManager : MonoBehaviour {
     /// Verifies we're in a situation where it's appropriate to read player input
     /// </summary>
     private bool ShouldReadGameplayRelatedInput() {
-        return (gameManagerReference && gameManagerReference.GetIsGameReady());
+        return (_gameManagerReference != null && _gameManagerReference.GetIsGameReady());
     }
     
     private void OnPlayerSpawned() {
-        if (!ServiceLocator.TryGetService<PlayerCharacterController>(out var playerController)) {
+        if (!ServiceLocator.TryGetService<ICharacterController>(out var playerController)) {
             Debug.LogError($"{name}: There is no PlayerCharacterController entry in the Service Locator!!");
             return;
         }
-        playerControllerReference = playerController;
-        if (!ServiceLocator.TryGetService<CameraController>(out var cameraController)) {
+        _playerControllerReference = playerController;
+        if (!ServiceLocator.TryGetService<ICameraController>(out var cameraController)) {
             Debug.LogError($"{name}: There is no CameraController entry in the Service Locator!!");
             return;
         }
-        cameraControllerReference = cameraController;
-        if (!ServiceLocator.TryGetService<GameManager>(out var gameManager)) {
+        _cameraControllerReference = cameraController;
+        if (!ServiceLocator.TryGetService<IGameManager>(out var gameManager)) {
             Debug.LogError($"{name}: There is no GameManager entry in the Service Locator!!");
             return;
         }
-        gameManagerReference = gameManager;
+        _gameManagerReference = gameManager;
     }
 
     private void HandleUIToggled(bool active) {
@@ -107,8 +107,7 @@ public class InputManager : MonoBehaviour {
 
     private void HandleRequestPauseGameInput(InputAction.CallbackContext ctx) {
         if (!ShouldReadGameplayRelatedInput()) return;
-        if (!gameManagerReference) return;
-        gameManagerReference.SetGamePaused(true);
+        _gameManagerReference?.SetGamePaused(true);
     }
     
     private void HandleCheatLevelInput(InputAction.CallbackContext ctx) {
@@ -127,42 +126,38 @@ public class InputManager : MonoBehaviour {
     }
     
     private void HandleJumpInput(InputAction.CallbackContext ctx) {
-        if (!playerControllerReference) return;
         if (!ShouldReadGameplayRelatedInput()) return;
         if (ctx.started) {
             ActionBuffer.Add(ctx.action.name); // [!] We buffer exclusively the start inputs
-            playerControllerReference.OnJump();
+            _playerControllerReference?.OnJump();
         }
         else {
-            playerControllerReference.OnCancelJump();
+            _playerControllerReference?.OnCancelJump();
         }
     }
 
     private void HandleRespawnInput(InputAction.CallbackContext ctx) {
-        if (!gameManagerReference) return;
         if (!ShouldReadGameplayRelatedInput()) return;
-        gameManagerReference.RespawnPlayer();
+        _gameManagerReference?.RespawnPlayer();
     }
     
     private void HandleLookInput(InputAction.CallbackContext ctx) {
-        if (!cameraControllerReference) return;
         if (!ShouldReadGameplayRelatedInput()) return;
         // We don't add camera input to the action buffer
         var isMouseInput = ctx.control.device.name.Contains("Mouse");
         if (isMouseInput && !_mouseLocked) {
             // We don't move the camera with the mouse if it isn't locked
             // We also cancel the movement in case it's toggled while the mouse is moving
-            cameraControllerReference.OnLook(Vector2.zero, true);
+            _cameraControllerReference?.OnLook(Vector2.zero, true);
             return;
         } 
-        cameraControllerReference.OnLook(ctx.ReadValue<Vector2>(), isMouseInput);
+        _cameraControllerReference?.OnLook(ctx.ReadValue<Vector2>(), isMouseInput);
     }
     
     private void HandleMoveInput(InputAction.CallbackContext ctx) {
-        if (!playerControllerReference) return;
         if (!ShouldReadGameplayRelatedInput()) return;
         // We don't add movement to the action buffer
-        playerControllerReference.OnMove(ctx.ReadValue<Vector2>());
+        _playerControllerReference?.OnMove(ctx.ReadValue<Vector2>());
     }
 
     private void Awake() {

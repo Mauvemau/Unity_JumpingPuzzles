@@ -1,7 +1,20 @@
 using System;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public interface IGameManager {
+    public void SetGamePaused(bool paused);
+    /// <summary>
+    /// Returns if the game is initialized and not paused
+    /// </summary>
+    public bool GetIsGameReady();
+    /// <summary>
+    /// Changes the position of current player spawn position
+    /// </summary>
+    public void SetPlayerRespawnPosition(Vector3 position);
+    public void RespawnPlayer();
+}
+
+public class GameManager : MonoBehaviour, IGameManager {
     [Header("Main Actors")] 
     [SerializeField] private GameObject playerPrefab;
 
@@ -34,16 +47,10 @@ public class GameManager : MonoBehaviour {
         OnGamePaused?.Invoke(paused);
     }
     
-    /// <summary>
-    /// Returns if the game is initialized and not paused
-    /// </summary>
     public bool GetIsGameReady() {
         return (_gameInitialized && !_gamePaused);
     }
     
-    /// <summary>
-    /// Changes the position of current player spawn position
-    /// </summary>
     public void SetPlayerRespawnPosition(Vector3 position) {
         _currentPlayerSpawnPosition = position;
     }
@@ -86,15 +93,15 @@ public class GameManager : MonoBehaviour {
     }
     
     private void PerformInitialInit() {
-        ServiceLocator.SetService(this);
+        ServiceLocator.SetService<IGameManager>(this);
         _currentPlayerSpawnPosition = !defaultPlayerSpawnPosition ? Vector3.zero : defaultPlayerSpawnPosition.position;
         _playerInstance = Instantiate(playerPrefab, _currentPlayerSpawnPosition, Quaternion.identity);
         _playerInstance.SetActive(false);
         
         var characterPlayerComponent = _playerInstance.GetComponent<PlayerCharacter>();
         var controllerPlayerComponent = _playerInstance.GetComponent<PlayerCharacterController>();
-        ServiceLocator.SetService(characterPlayerComponent);
-        ServiceLocator.SetService(controllerPlayerComponent);
+        ServiceLocator.SetService<IPlayableCharacter>(characterPlayerComponent);
+        ServiceLocator.SetService<ICharacterController>(controllerPlayerComponent);
     }
     
     private void Awake() {

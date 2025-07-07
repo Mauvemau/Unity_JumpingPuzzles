@@ -1,7 +1,5 @@
-using System;
 using TMPro;
 using UnityEngine;
-
 
 /// <summary>
 /// Updates a TMP text with a ScriptableObject event

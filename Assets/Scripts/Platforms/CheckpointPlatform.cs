@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 /// <summary>
@@ -9,13 +8,13 @@ public class CheckpointPlatform : CollisionInteractable {
     [SerializeField] private Vector3 respawnOffset;
     
     protected override void HandleCollision(GameObject other) {
-        if (!ServiceLocator.TryGetService<GameManager>(out var gameManager)) return;
+        if (!ServiceLocator.TryGetService<IGameManager>(out var gameManager)) return;
         var spawnPosition = respawnOffset;
         if (spawnPosition == Vector3.zero) {
             spawnPosition = transform.position;
             spawnPosition.y = transform.position.y + 2;
         }
-        gameManager.SetPlayerRespawnPosition(spawnPosition);
+        gameManager?.SetPlayerRespawnPosition(spawnPosition);
     }
 
     protected override void HandleTrigger(GameObject other) { }
