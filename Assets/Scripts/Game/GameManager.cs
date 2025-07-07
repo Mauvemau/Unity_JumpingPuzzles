@@ -12,6 +12,7 @@ public interface IGameManager {
     /// </summary>
     public void SetPlayerRespawnPosition(Vector3 position);
     public void RespawnPlayer();
+    public void TriggerVictory();
 }
 
 public class GameManager : MonoBehaviour, IGameManager {
@@ -20,6 +21,9 @@ public class GameManager : MonoBehaviour, IGameManager {
 
     [Header("Game Configuration")]
     [SerializeField] private Transform defaultPlayerSpawnPosition;
+
+    [Header("Audio")] 
+    [SerializeField] private AudioClip2DContainer respawnSfx;
     
     [Header("Event Listeners")]
     [SerializeField] private VoidEventChannel requestInitGameChannel;
@@ -30,6 +34,7 @@ public class GameManager : MonoBehaviour, IGameManager {
     [Header("Event Invokers")] 
     [SerializeField] private BoolEventChannel requestToggleHud;
     [SerializeField] private BoolEventChannel requestTogglePauseMenuChannel;
+    [SerializeField] private BoolEventChannel requestToggleVictoryMenuChannel;
     
     // Event Actions
     public static event Action OnGameStarted = delegate {};
@@ -43,7 +48,7 @@ public class GameManager : MonoBehaviour, IGameManager {
     private Vector3 _currentPlayerSpawnPosition;
     private bool _gameInitialized = false;
     private bool _gamePaused = false;
-
+    
     public void SetGamePaused(bool paused) {
         _gamePaused = paused;
         _playerInstance.SetActive(!paused);
@@ -64,8 +69,20 @@ public class GameManager : MonoBehaviour, IGameManager {
     public void RespawnPlayer() {
         var player = _playerInstance.GetComponent<PlayerCharacter>();
         player.RequestSetPosition(_currentPlayerSpawnPosition);
+        respawnSfx.PlayAudioClip();
     }
 
+    [ContextMenu("Force Victory")]
+    public void TriggerVictory() {
+        _gamePaused = true;
+        _playerInstance.SetActive(false);
+        requestToggleHud.RaiseEvent(false);
+        if (requestToggleVictoryMenuChannel) {
+            requestToggleVictoryMenuChannel.RaiseEvent(true);
+        }
+        OnGamePaused?.Invoke(true);
+    }
+    
     [ContextMenu("Force Close Game")]
     private void ExitApplication() {
 #if UNITY_EDITOR
