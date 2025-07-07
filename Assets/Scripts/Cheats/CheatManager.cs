@@ -37,6 +37,7 @@ public class CheatManager : MonoBehaviour {
     }
     
     private void OnGameStarted() {
+        _currentWaypoint = 0;
         if (!ServiceLocator.TryGetService<IPlayableCharacter>(out var playerCharacter)) {
             Debug.LogError($"{name}: Unable to find player character on ServiceLocator!");
             return;
