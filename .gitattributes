@@ -140,5 +140,5 @@
 *.tar lfs-file
 
 # Third Party
-Assets/TextMesh Pro/** linguist-vendored
+Assets/TextMesh[[:space:]]Pro/** linguist-vendored
 Assets/Cinemachine/** linguist-vendored
