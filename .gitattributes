@@ -138,3 +138,7 @@
 *.gz lfs-file
 *.rar lfs-file
 *.tar lfs-file
+
+# Third Party
+Assets/TextMesh Pro/** linguist-vendored
+Assets/Cinemachine/** linguist-vendored
